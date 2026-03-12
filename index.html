@@ -68,6 +68,17 @@
 
     /* Article card date line */
     .date-line::before { content: ''; display: inline-block; width: 24px; height: 1px; background: currentColor; opacity: 0.3; vertical-align: middle; margin-right: 8px; }
+
+    /* Circular avatar */
+    .avatar-ring {
+      width: 125px; height: 125px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+      box-shadow: 0 0 0 2px #faf8f5, 0 0 0 3.5px #1a6b5c;
+      transition: box-shadow 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .dark .avatar-ring { box-shadow: 0 0 0 2px #0e0d0b, 0 0 0 3.5px #3dd4ad; }
+    .avatar-ring:hover { transform: scale(1.05); box-shadow: 0 0 0 2px #faf8f5, 0 0 0 5px #1a6b5c; }
+    .dark .avatar-ring:hover { box-shadow: 0 0 0 2px #0e0d0b, 0 0 0 5px #3dd4ad; }
+    .avatar-ring img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
   </style>
 </head>
 
@@ -119,9 +130,14 @@
       <div class="grid lg:grid-cols-12 gap-8 items-end">
         <div class="lg:col-span-8">
           <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-accent-light dark:text-accent-dark mb-6">Software Engineer · Machine Learning</p>
-          <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-ink-900 dark:text-ink-100 leading-[0.95] mb-8">
-            Jainum<br/>Sanghavi
-          </h1>
+          <div class="flex items-center gap-6 mb-8">
+            <div class="avatar-ring">
+              <img src="assets/photo.jpg" alt="Jainum Sanghavi" />
+            </div>
+            <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-ink-900 dark:text-ink-100 leading-[0.95]">
+              Jainum<br/>Sanghavi
+            </h1>
+          </div>
           <p class="text-lg md:text-xl text-ink-500 dark:text-ink-400 leading-relaxed max-w-xl font-light">
             I build software that stands the test of time. My focus is machine learning grounded in mathematical rigor, from equivariant neural architectures to the infrastructure that deploys them.
           </p>
