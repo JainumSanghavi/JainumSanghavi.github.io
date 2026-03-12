@@ -66,6 +66,10 @@
     /* Staggered animations */
     .stagger-1 { transition-delay: 0.1s; } .stagger-2 { transition-delay: 0.2s; } .stagger-3 { transition-delay: 0.3s; } .stagger-4 { transition-delay: 0.4s; }
 
+    /* Nav responsive fallback — ensures correct show/hide regardless of Tailwind CDN */
+    @media (min-width: 768px) { #mobile-nav-btns { display: none !important; } }
+    @media (max-width: 767px) { #nav-links { display: none !important; } }
+
     /* Article card date line */
     .date-line::before { content: ''; display: inline-block; width: 24px; height: 1px; background: currentColor; opacity: 0.3; vertical-align: middle; margin-right: 8px; }
 
@@ -102,7 +106,7 @@
         </button>
       </div>
 
-      <div class="flex items-center gap-3 md:hidden">
+      <div id="mobile-nav-btns" class="flex items-center gap-3 md:hidden">
         <button id="theme-toggle-mobile" class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-500 dark:text-ink-400" aria-label="Toggle theme">
           <i class="fa-solid fa-moon text-xs dark:hidden"></i>
           <i class="fa-solid fa-sun text-xs hidden dark:inline"></i>
