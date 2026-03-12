@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformers vs State Space Models: What the Perplexity Scores Don't Tell You</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        ink: { 50: '#faf8f5', 100: '#f0ece5', 200: '#ddd6c9', 300: '#c4b9a8', 400: '#a69882', 500: '#8a7d68', 600: '#6b6150', 700: '#4a4438', 800: '#2a2520', 900: '#1a1714', 950: '#0e0d0b' },
+                        accent: { light: '#1a6b5c', DEFAULT: '#1a6b5c', dark: '#3dd4ad' },
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Grain texture overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+    </style>
+</head>
+<body class="bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-200 font-body antialiased transition-colors duration-300">
+
+    <!-- Grain texture overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation bar -->
+    <nav class="max-w-2xl mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
+        <a href="index.html" class="inline-flex items-center gap-2 text-sm font-medium text-accent dark:text-accent-dark hover:underline underline-offset-4 transition-colors">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+            Back to portfolio
+        </a>
+        <button id="dark-mode-toggle" class="p-2 rounded-lg text-ink-500 dark:text-ink-400 hover:text-ink-800 dark:hover:text-ink-100 hover:bg-ink-200/50 dark:hover:bg-ink-800/50 transition-colors" aria-label="Toggle dark mode">
+            <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+            <i class="fa-solid fa-sun text-lg hidden dark:inline"></i>
+        </button>
+    </nav>
+
+    <!-- Article -->
+    <article class="max-w-2xl mx-auto px-6 pb-20">
+
+        <!-- Title -->
+        <header class="mt-6 mb-12">
+            <h1 class="font-display text-4xl md:text-5xl font-semibold text-ink-900 dark:text-ink-100 leading-tight tracking-tight">
+                Transformers vs State Space Models: What the Perplexity Scores Don't Tell You
+            </h1>
+        </header>
+
+        <!-- Body -->
+        <div class="space-y-6">
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">There's a peculiar dynamic in machine learning research where a metric becomes so convenient that it starts to dominate how we think. Perplexity did this in language modeling. Ask a researcher which model is better: a Transformer with 4.02 perplexity or a State Space Model with 5.1. Most will give you an answer within seconds. The Transformer wins. Case closed. That's how it feels, anyway.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">But this intuition, while not wrong, obscures something interesting. The perplexity gap actually reflects something real about how different architectures are built and what problems they're optimized for. I wanted to understand this better, so I started benchmarking these two approaches. The question I was really trying to answer was: why do they work so differently, and when should you actually choose one over the other?</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">The Transformer's Dominance</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The Transformer architecture, introduced in 2017, succeeded by solving a clear problem: how to model long-range dependencies in sequences without the vanishing gradient problems that plagued RNNs. The solution was elegant. Use attention to let every token directly communicate with every other token, weighted by learned similarity scores. This meant the model could in principle capture arbitrarily distant dependencies. If it learned to assign high attention weights across a large distance, the gradient signal could flow directly without getting weaker.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This design choice had massive practical consequences. For large-vocabulary language modeling tasks, Transformers achieve genuinely impressive perplexity scores. On BookCorpus, a standard benchmark for language modeling, a well-tuned decoder-only Transformer can achieve 4.02 perplexity. That's quite good. It means the model assigns probability mass to reasonable continuations and doesn't get totally surprised by the next word.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">But here's the thing that perplexity doesn't tell you. This number represents a particular solution to a particular problem, under particular constraints. The Transformer is optimized for the largest possible vocabularies and the most complex attention patterns. It's a generalist architecture, and it's good at generalist tasks. For many applications, especially where you have enough computational resources and you care deeply about perplexity, Transformers are genuinely the right choice.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The risk is assuming this domination extends further than it actually does.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">State Space Models: A Different Lens</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">State Space Models (SSMs) come from a radically different tradition. They emerge from control theory and signal processing, domains that have spent decades thinking about how to model dynamical systems efficiently. The core idea is simple: represent the state of a system and its evolution over time.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">A state space model has this form: given an input sequence, maintain a hidden state that evolves according to a linear recurrence. At each timestep, the state updates based on the previous state and the current input. This is genuinely old technology. Kalman filters work this way, and they've been used for spacecraft guidance since the 1960s. The question SSM researchers asked was: can we apply this formalism to sequence modeling, and can we make it efficient?</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This is where S4 (Structured State Spaces for Sequence Modeling) enters the picture. S4 takes the state space framework and adds a crucial insight: the recurrence can be unrolled into a convolution, and that convolution can be computed efficiently using the Fast Fourier Transform (FFT). This is not obvious. Most people's intuition about recurrent models is that you have to compute them step-by-step. S4 showed you don't. If the recurrence has certain structure, you can compute it all at once in O(N log N) time, where N is the sequence length.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This matters because it means S4 can be trained in parallel, like a Transformer, rather than having to be computed sequentially, like an RNN. That's a huge practical win.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">Understanding the Trade-offs Through the Lens of Perplexity</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">So where does S4's 5.1 perplexity on BookCorpus come from? I wanted to understand why the gap exists compared to the Transformer's 4.02, so I dug into the architecture to see what's actually happening.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Part of the answer is architectural. S4 processes information through a fixed-dimensional latent state, which gets updated recurrently. This means that at any point in time, all historical information has been "compressed" into this state vector. A Transformer, by contrast, has direct access to every previous token through attention. When you need to predict the next word, a Transformer can directly compare the current context against all previous contexts it's seen. An S4 model has to squeeze everything into its hidden state.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">For predicting the next token in natural language (which is what perplexity measures), this is a genuine disadvantage when vocabularies are large and semantic dependencies are complex. Transformers can develop rich attention patterns that say, essentially, "when I see this particular word, I should look back to this specific earlier word." S4 has to accomplish this through its recurrent state, which is more constrained.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">There's another factor at play too. The Transformer's quadratic attention is actually quite data-efficient for learning long-range dependencies. Yes, it's expensive at inference time, but during training, when you can afford to pay that cost, it provides a very clear learning signal. S4's FFT-based convolution is more restrictive in what dependencies it can represent. Not worse. Just different.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">But here's what's crucial: perplexity is not the only thing that matters in language modeling, and it's definitely not the only thing that matters in sequence modeling broadly.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">The Hidden Dimensions: What Perplexity Ignores</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Consider inference speed. A Transformer with context length 4096 needs to compute attention over all 4096 positions. That's a quadratic operation. S4, even though it's trained with FFT-based convolutions, can be deployed as a recurrent model at inference time. It takes just O(N) memory and time per new token, where N is the hidden state dimension. This is genuinely small. For long sequences, this is not a marginal advantage. It's foundational.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Training efficiency is similar. A Transformer's memory usage scales with sequence length squared (you need to store attention matrices). S4's memory is roughly linear in sequence length. For long documents or long-context tasks, this difference can mean the gap between "feasible" and "infeasible."</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">There's also the question of what you're modeling. Perplexity works well as a metric when you care about predicting the next token in natural language, where long-range semantic dependencies matter and where you have essentially unlimited vocabulary. But language modeling is not the only sequence modeling task. Consider modeling time-series data, audio, DNA sequences, or anything where you have long dependencies but shorter effective "memory" requirements. In these domains, S4's advantages become more apparent.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">And there's something more subtle: robustness to distribution shift. Transformers work by learning specific attention patterns. If you train on BookCorpus and then apply to a different text domain, there's a question of whether the attention patterns you learned transfer. S4 models, because they use a more restrictive recurrent structure, might actually generalize more robustly across domains. This is speculative (we don't have enough empirical work here), but it's the kind of question that perplexity doesn't even know to ask.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">Why Transformers Win the Perplexity Game</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">I want to be intellectually honest here. Transformers win on perplexity for reasons that are actually sensible. Large language models benefit from very large vocabularies and very long contexts. Transformers scale gracefully to both. The attention mechanism is also remarkably sample-efficient. You can learn useful representations with less data than many other architectures require. And the research community has poured enormous effort into optimizing Transformers, which counts for something.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">It's also true that perplexity, while incomplete, is not meaningless. A model with worse perplexity is generally doing something suboptimal. It's paying less probability to the true next token than it could. The 1.08-point gap between the Transformer and S4 is real.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">But the gap narrows if you think about the question differently. What if you compared a Transformer and S4 under equal computational budgets? What if you compared them on tasks with much longer sequences? What if you measured inference latency instead of perplexity? The Transformer's dominance would shrink. Not disappear. It would still be a strong architecture. But it would shrink.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">The Future: Hybrid Thinking</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">One interesting research direction is hybrid architectures that combine the strengths of both. You might use Transformer attention for short-range dependencies, where it's most efficient and most powerful, and use state space models or other linear-time mechanisms for long-range dependencies. This isn't a new idea. It's been explored. But it represents a more nuanced view of the trade-offs that I think matters for building systems that will last.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Another direction is to ask whether the inductive biases of state space models could be improved. S4 is elegant, but it's not sacred. Maybe there are other linear-time sequence models that capture long-range dependencies better. Maybe hybrid convolutions could work. The design space is large, and I think the opportunity is to find approaches that scale and perform well without sacrificing the ability to run efficiently.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">What seems likely is that we're in an era where architecture choice will become more important relative to sheer scale. For a long time, scaling Transformers with more parameters and more data solved many problems. That remains true, but we're hitting computational limits. If you want models that are efficient, that can handle very long sequences, that can run on edge devices, then you need to think more carefully about your choices. This is where I think the craft of engineering matters most. Transformers aren't always the answer, even if they're often a good one.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-12 mb-4">Conclusion</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The perplexity scores tell a real story. The Transformer is a powerful architecture, well-suited to large-scale language modeling. But like any metric, perplexity is lossy. It compresses a high-dimensional question, "which architecture is better," into a single number. The real answer is: better for what?</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Better for predicting the next token in English text? Transformers, usually. Better for inference efficiency? S4. Better for handling very long sequences? S4. Better for sample efficiency? Probably Transformers. Better for domain transfer? We don't know yet. Better as a stepping stone to understanding general intelligence? That's the deepest question, and I'm not sure perplexity can answer it at all.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">What we should take from this is not that Transformers are always better, but that the architecture choices we make encode assumptions about what we think is important. Transformers assume you care about semantic complexity and have the compute budget for attention. State space models assume you care about efficiency and can live with more constrained dependencies. Neither is universally true. Building things that stand the test of time means recognizing which assumptions fit your problem, and having the intellectual honesty to question the metrics we use to judge success. That's where real engineering happens.</p>
+
+        </div>
+    </article>
+
+    <!-- Dark mode toggle script -->
+    <script>
+        const toggle = document.getElementById('dark-mode-toggle');
+        const html = document.documentElement;
+
+        // Check for saved preference, then system preference
+        if (localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        toggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
+        });
+    </script>
+
+</body>
+</html>

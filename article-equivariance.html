@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Equivariance Matters | Jainum Sanghavi</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { 50: '#faf8f5', 100: '#f0ece5', 200: '#ddd6c9', 300: '#c4b9a8', 400: '#a69882', 500: '#8a7d68', 600: '#6b6150', 700: '#4a4438', 800: '#2a2520', 900: '#1a1714', 950: '#0e0d0b' },
+            accent: { light: '#1a6b5c', DEFAULT: '#1a6b5c', dark: '#3dd4ad' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    /* Grain texture overlay */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-200 font-body antialiased transition-colors duration-300">
+
+  <!-- Grain overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- Top navigation bar -->
+  <nav class="max-w-2xl mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
+    <a href="index.html" class="text-sm font-medium text-accent dark:text-accent-dark hover:underline underline-offset-4 transition-colors duration-200">
+      <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to portfolio
+    </a>
+    <button
+      id="dark-mode-toggle"
+      class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors duration-200"
+      aria-label="Toggle dark mode"
+    >
+      <i class="fa-solid fa-sun text-sm dark:hidden"></i>
+      <i class="fa-solid fa-moon text-sm hidden dark:inline"></i>
+    </button>
+  </nav>
+
+  <!-- Article -->
+  <article class="max-w-2xl mx-auto px-6 pt-4 pb-24">
+
+    <header class="mb-12">
+      <h1 class="font-display text-4xl sm:text-5xl font-semibold leading-tight text-ink-900 dark:text-ink-100">
+        Why Equivariance Matters: Encoding Symmetry Into Neural Networks
+      </h1>
+    </header>
+
+    <div class="space-y-6">
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        There's something odd about how we build neural networks. We create them to solve real problems in the physical world: predicting molecular properties, understanding images, simulating physical systems. Yet we're often shocked when they fail to respect the symmetries that actually govern that world. A molecule rotated in space is still the same molecule. Cellular tissue stretched horizontally should behave identically if stretched vertically instead. But a standard neural network trained on one orientation must essentially re-learn the pattern when it sees the transformed version. So we compensate by throwing more data at it: rotate the images, augment the training sets, duplicate the effort. It works, mostly. But it feels wasteful, like asking someone to memorize multiplication tables after they already understand algebra.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The insight that changed my perspective is that we can do better. Instead of asking networks to implicitly discover symmetries through pattern repetition, we can build them to explicitly respect these symmetries from the start. This isn't a small optimization. It's a completely different way of thinking about how we encode what we actually know into machine learning systems. When I applied this principle to real scientific problems, like measuring forces inside living cells, predicting molecular energies, and understanding fluid dynamics, something interesting happened. The systems worked better, required far less data, and made predictions that actually obeyed the physics I knew to be true.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">What Symmetry Actually Means</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Let's start with something intuitive. You're training a network to recognize cats versus dogs in images. You show it thousands of photos: cats facing left, cats facing right, cats upside down (rarely), dogs in sunlight, dogs in shadow. Here's the thing: a cat facing left is still a cat. The network shouldn't need separate feature detectors for "leftward-facing cats" and "rightward-facing cats." It could develop them, and often does at least partially, because the pattern works. But this only happens if the network sees both versions during training. Show it cats facing only one direction, and it'll probably struggle with cats from other angles.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Symmetry, in this context, means that certain transformations of the input produce predictable transformations of the output. Sometimes there's no transformation of the output at all, the network's prediction stays the same regardless of certain changes in the input. A rotation of the image shouldn't change the label "cat." A reflection shouldn't matter. These are the symmetries we're discussing: consistent relationships between what you feed into a system and what comes out.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Why this matters goes deeper than efficiency, though efficiency definitely matters. When you force a network to respect symmetries from the start, you're constraining it to learn only what's actually true about the problem. You avoid learning spurious patterns that merely correlate with the truth in your training set. You're encoding physical knowledge into the architecture itself. And when that knowledge is correct, it generalizes far beyond whatever data you happened to collect.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">Data Augmentation: The Brute Force Approach</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The conventional answer to the symmetry problem is data augmentation. Need the network to be rotation-invariant? Rotate all your training images by random amounts. Need it to handle different lighting? Adjust the brightness. Works in the cloud, works in the rain? Create synthetic rain. This approach has been wildly successful. Data augmentation is one of the most effective techniques in computer vision and has become standard across domains.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        But here's the hidden cost. When you augment your data, you're duplicating information. Rotate an image thirty ways, and you've created thirty copies of essentially the same example. The network has to see all thirty (or most of them) to learn that rotation doesn't matter. You're teaching it the same lesson over and over, just slightly differently each time. It works, and if you had unlimited data it wouldn't be wasteful in a pure information-theoretic sense. But you don't have unlimited data. Every rotated example is one you're not using to learn something genuinely new about the problem. For scientific domains especially, data is expensive. You can't generate more cellular biology experiments or materials science measurements by just rotating what you already have.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        There's also something philosophically unsatisfying about it. The network isn't learning that rotation doesn't matter; it's being forced to memorize that fact through exposure. If symmetries are truly fundamental to the problem, shouldn't we just tell the network that upfront instead of hoping it figures it out?
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">Group Theory as a Principled Framework</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        This is where group theory comes in, and this is where things get powerful. Group theory is the mathematical language for describing symmetries. A group is just a set of transformations that follow a few basic rules: you can compose them (do one after another), there's an identity transformation (do nothing), and every transformation has an inverse. Rotations form a group. Reflections do too. Translations as well. The mathematical formalism gives us a precise way to describe what symmetries exist and how they interact.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The truly important concept is equivariance. A function is equivariant to a group of transformations if applying a transformation to the input produces a proportional transformation to the output. For example, if you rotate an image and then apply a rotation-equivariant function, you get the same result as applying the function first and rotating the output. The transformation commutes with the function. This is different from invariance, where the output doesn't change at all. Though actually, invariance is just a special case of equivariance where the transformation applied to the output is the identity.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Here's the insight: we can design neural network layers that are equivariant by construction. Not through memorization, not through augmentation, but through how we mathematically structure the computation. The layers preserve the algebraic properties of the group. Yes, you need to understand what the group is, but you usually already know this from your domain. Cellular tissue behaves the same way under rotations, you know that. Molecular energy is invariant under rigid body transformations, you can look that up. Group theory gives you a systematic way to translate that knowledge into network architecture.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">SO(2) Equivariance and Rotational Physics</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        SO(2) is the group of rotations in two dimensions. It stands for "special orthogonal group" of dimension 2, and it's one of the most natural symmetries you encounter in practice. Why? Because many physical systems have rotational symmetry when you look at them the right way. Fluid flow around a cylinder. Cellular tissue under deformation. Images themselves, where a rotated image is just the same scene from a different angle.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        A SO(2)-equivariant neural network organizes feature maps throughout the network to explicitly respect rotational transformations. Instead of generic channels that individually learn features, you organize channels into groups where each group represents the same feature at different orientations. The mathematical structure ensures that when you rotate the input, these feature groups rotate in a coordinated way. They don't scramble, don't require re-learning.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The practical benefit is striking. A standard CNN trained on rotated images needs to see many rotations to learn robustness. A SO(2)-equivariant network can learn the same robustness from far fewer examples because it doesn't need to re-learn the same features at different angles. It's already built into the structure. And the network's internal representations become more interpretable as a bonus. You can actually see which features it's detecting and how those features transform under rotation.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">A Concrete Example: Predicting Cellular Forces</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Let me ground this in something real. Consider a problem from cellular biomechanics: predicting traction forces from displacement fields. When cells adhere to a substrate and pull on it, they create tiny deformations, displacements you can measure. The question is, can we infer the forces the cell is actually exerting from those measurements? It's genuinely useful for understanding cell biology, but it's also the perfect test case for equivariance because the physics is unambiguously rotational. A cell pulling rightward creates a force pointing rightward. Rotate the experimental setup ninety degrees, and the force rotates ninety degrees too. No ambiguity, the symmetry is intrinsic.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The standard approach: take displacement fields as input, predict force fields as output. To make it robust to different orientations, you augment the data. Rotate your training examples by various angles, train the network on all of them, hope it generalizes. It works, reasonably well.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Now build the same network with SO(2)-equivariance. The displacement field is treated as a vector field, at each spatial location there's direction and magnitude. The network is structured so its internal feature representations respect SO(2)'s group structure. Rotate the input displacement field by some angle, and every intermediate feature map rotates by that same angle. The output force field, being the final layer, also rotates by that angle. The entire computation is equivariant.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The results are remarkable. A SO(2)-equivariant network trained on displacement fields from cells in various orientations achieves a mean angular error of just 7 degrees when predicting force directions on entirely novel orientations. Without data augmentation. Without ever seeing those specific angles during training. The network didn't memorize variants, it learned a representation that automatically handles them because the mathematics guarantees it will. This is part of ongoing publication work, so I'll keep the implementation details proprietary, but the performance gain speaks for itself.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">The Deeper Significance</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Why does this matter? Because it points toward a more principled way of building AI systems, especially for scientific and engineering domains. We're shifting from a paradigm where you build generic networks and hope they learn the relevant structure, to one where you deliberately encode what you already know from the start.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        This has real implications. First, you become more data-efficient. Scientific measurements are expensive. Cut data requirements in half by respecting known symmetries, that's a massive win. Second, your models become more interpretable and trustworthy. When a model respects the symmetries of physics, it's less likely to make physically nonsensical predictions. A force prediction that rotates correctly isn't just mathematically elegant, it's physically believable. Third, you see a pattern for the future: identify the structure in your problem domain, express it in group-theoretic terms, design your network to respect it.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        I picked the cellular traction force example not because it's the most impactful application, though understanding cellular mechanics definitely matters, but because it's a clean demonstration of the principle. The symmetry is unambiguous, the problem is real, the performance improvement is quantifiable. It proves that principled approaches to encoding domain knowledge actually work better than hoping networks will stumble on the right patterns.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">Toward the Future</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        As machine learning moves deeper into scientific domains, equivariance will likely become less of a research curiosity and more of a standard practice. You'll see it in molecular dynamics, materials science, fluid mechanics, anywhere the physics has symmetries you can express mathematically.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The broader lesson is how you should think about neural networks in high-stakes domains. They're not magical pattern-finding machines that work best when you just let them loose. They're tools that benefit enormously from careful structural design based on what you understand about the domain. The networks that will drive progress in scientific machine learning aren't the ones throwing more data and compute at problems. They're the ones that thoughtfully encode what we already know.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Symmetry, as it turns out, isn't just a beautiful feature of physics. It's a practical roadmap for building better, more efficient, more trustworthy AI systems. Learning to recognize and encode it is one of the most important skills for anyone building machine learning systems that actually work reliably in the real world.
+      </p>
+
+    </div>
+  </article>
+
+  <!-- Dark mode toggle script -->
+  <script>
+    (function () {
+      const toggle = document.getElementById('dark-mode-toggle');
+      const html = document.documentElement;
+
+      // Initialize from localStorage or system preference
+      if (localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+
+      toggle.addEventListener('click', function () {
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio SVG Visualizations</title>
+<style>
+  /* Preview page styles only — not needed when embedding */
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 2rem;
+    background: #f8fafc;
+    color: #1e293b;
+  }
+  .preview-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 480px;
+  }
+  .preview-card h3 {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .dark-preview {
+    background: #1e293b;
+    color: #e2e8f0;
+  }
+  .dark-preview h3 { color: #94a3b8; }
+  .toggle-btn {
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.875rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>SVG Visualizations for Portfolio</h1>
+<p>Each SVG uses <code>currentColor</code> and CSS custom properties for light/dark theming.</p>
+<button class="toggle-btn" onclick="document.querySelectorAll('.preview-card').forEach(c=>c.classList.toggle('dark-preview'))">Toggle Dark Mode Preview</button>
+
+<!-- ============================================================
+     SVG 1: EQUIVARIANT TRACTION FORCE (id="svg-equivariant")
+     Circular vector field with smooth SO(2) rotation
+     ============================================================ -->
+<div class="preview-card" id="svg-equivariant">
+  <h3>1 — Equivariant Traction Force</h3>
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rotating vector field demonstrating SO(2) equivariance">
+    <style>
+      .eq-field { animation: eq-rotate 12s linear infinite; transform-origin: 200px 125px; }
+      @keyframes eq-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      .eq-arrow { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+      .eq-arrow-head { fill: currentColor; opacity: 0.7; }
+      .eq-center { fill: none; stroke: currentColor; opacity: 0.12; stroke-width: 1; }
+      .eq-dot { fill: currentColor; opacity: 0.25; }
+      .eq-ring { fill: none; stroke: currentColor; stroke-width: 0.5; opacity: 0.08; }
+      .eq-glow { fill: currentColor; opacity: 0.04; }
+      .eq-inner-field { animation: eq-rotate-inner 18s linear infinite reverse; transform-origin: 200px 125px; }
+      @keyframes eq-rotate-inner { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Subtle background rings -->
+    <circle class="eq-ring" cx="200" cy="125" r="40"/>
+    <circle class="eq-ring" cx="200" cy="125" r="65"/>
+    <circle class="eq-ring" cx="200" cy="125" r="90"/>
+    <circle class="eq-ring" cx="200" cy="125" r="115"/>
+    <circle class="eq-glow" cx="200" cy="125" r="90"/>
+
+    <!-- Center reference -->
+    <circle class="eq-center" cx="200" cy="125" r="4"/>
+    <circle class="eq-dot" cx="200" cy="125" r="2"/>
+
+    <!-- Inner ring of arrows (6 arrows at r=45, shorter) — rotates in reverse -->
+    <g class="eq-inner-field">
+      <!-- 0° -->
+      <line class="eq-arrow" x1="240" y1="125" x2="258" y2="125" style="opacity:0.4"/>
+      <polygon class="eq-arrow-head" points="258,122 264,125 258,128" style="opacity:0.4"/>
+      <!-- 60° -->
+      <line class="eq-arrow" x1="222.5" y1="86" x2="231.5" y2="70.4" style="opacity:0.4"/>
+      <polygon class="eq-arrow-head" points="228.6,68.7 234.4,67.1 234.4,73.7" style="opacity:0.4" transform="rotate(-30,231.5,70.4)"/>
+      <!-- 120° -->
+      <line class="eq-arrow" x1="177.5" y1="86" x2="168.5" y2="70.4" style="opacity:0.4"/>
+      <polygon class="eq-arrow-head" points="165.6,68.7 165.6,75.3 171.4,73.7" style="opacity:0.4" transform="rotate(30,168.5,70.4)"/>
+      <!-- 180° -->
+      <line class="eq-arrow" x1="160" y1="125" x2="142" y2="125" style="opacity:0.4"/>
+      <polygon class="eq-arrow-head" points="142,122 136,125 142,128" style="opacity:0.4"/>
+      <!-- 240° -->
+      <line class="eq-arrow" x1="177.5" y1="164" x2="168.5" y2="179.6" style="opacity:0.4"/>
+      <polygon class="eq-arrow-head" points="165.6,181.3 171.4,176.3 165.6,174.7" style="opacity:0.4" transform="rotate(-30,168.5,179.6)"/>
+      <!-- 300° -->
+      <line class="eq-arrow" x1="222.5" y1="164" x2="231.5" y2="179.6" style="opacity:0.4"/>
+      <polygon class="eq-arrow-head" points="234.4,181.3 228.6,176.3 234.4,174.7" style="opacity:0.4" transform="rotate(30,231.5,179.6)"/>
+    </g>
+
+    <!-- Outer ring of arrows (12 arrows at r=80) — main rotation -->
+    <g class="eq-field">
+      <!-- Arrow function: each arrow starts at a point on the circle, extends outward 30px -->
+      <!-- 0° (right) -->
+      <line class="eq-arrow" x1="275" y1="125" x2="303" y2="125"/>
+      <polygon class="eq-arrow-head" points="303,121.5 310,125 303,128.5"/>
+      <!-- 30° -->
+      <line class="eq-arrow" x1="269.3" y1="85" x2="283.3" y2="60.7"/>
+      <polygon class="eq-arrow-head" points="280,58 287,56.5 286.6,64" transform="rotate(-60,283.3,60.7)"/>
+      <!-- 60° -->
+      <line class="eq-arrow" x1="240" y1="55.7" x2="254" y2="31.4"/>
+      <polygon class="eq-arrow-head" points="250.7,28.7 257.7,27.2 257.3,34.7" transform="rotate(-30,254,31.4)"/>
+      <!-- 90° (top) -->
+      <line class="eq-arrow" x1="200" y1="45" x2="200" y2="17"/>
+      <polygon class="eq-arrow-head" points="196.5,17 200,10 203.5,17"/>
+      <!-- 120° -->
+      <line class="eq-arrow" x1="160" y1="55.7" x2="146" y2="31.4"/>
+      <polygon class="eq-arrow-head" points="142.7,34.7 142.3,27.2 149.3,28.7" transform="rotate(30,146,31.4)"/>
+      <!-- 150° -->
+      <line class="eq-arrow" x1="130.7" y1="85" x2="116.7" y2="60.7"/>
+      <polygon class="eq-arrow-head" points="113.4,64 113,56.5 120,58" transform="rotate(60,116.7,60.7)"/>
+      <!-- 180° (left) -->
+      <line class="eq-arrow" x1="125" y1="125" x2="97" y2="125"/>
+      <polygon class="eq-arrow-head" points="97,121.5 90,125 97,128.5"/>
+      <!-- 210° -->
+      <line class="eq-arrow" x1="130.7" y1="165" x2="116.7" y2="189.3"/>
+      <polygon class="eq-arrow-head" points="120,192 113,193.5 113.4,186" transform="rotate(60,116.7,189.3)"/>
+      <!-- 240° -->
+      <line class="eq-arrow" x1="160" y1="194.3" x2="146" y2="218.6"/>
+      <polygon class="eq-arrow-head" points="149.3,221.3 142.3,222.8 142.7,215.3" transform="rotate(-30,146,218.6)"/>
+      <!-- 270° (bottom) -->
+      <line class="eq-arrow" x1="200" y1="205" x2="200" y2="233"/>
+      <polygon class="eq-arrow-head" points="196.5,233 200,240 203.5,233"/>
+      <!-- 300° -->
+      <line class="eq-arrow" x1="240" y1="194.3" x2="254" y2="218.6"/>
+      <polygon class="eq-arrow-head" points="250.7,221.3 257.3,215.3 257.7,222.8" transform="rotate(30,254,218.6)"/>
+      <!-- 330° -->
+      <line class="eq-arrow" x1="269.3" y1="165" x2="283.3" y2="189.3"/>
+      <polygon class="eq-arrow-head" points="280,192 286.6,186 287,193.5" transform="rotate(-60,283.3,189.3)"/>
+    </g>
+  </svg>
+</div>
+
+
+<!-- ============================================================
+     SVG 2: STATE SPACES VS TRANSFORMERS (id="svg-transformers")
+     Split view: Transformer attention (left) vs S4 sequential (right)
+     ============================================================ -->
+<div class="preview-card" id="svg-transformers">
+  <h3>2 — State Spaces vs Transformers</h3>
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of Transformer attention and S4 state space model">
+    <style>
+      /* Transformer attention lines */
+      .tf-attn-1 { animation: tf-pulse1 3s ease-in-out infinite; }
+      .tf-attn-2 { animation: tf-pulse2 3.5s ease-in-out infinite; }
+      .tf-attn-3 { animation: tf-pulse3 4s ease-in-out infinite; }
+      .tf-attn-4 { animation: tf-pulse4 2.8s ease-in-out infinite; }
+      .tf-attn-5 { animation: tf-pulse5 3.2s ease-in-out infinite; }
+      .tf-attn-6 { animation: tf-pulse6 4.2s ease-in-out infinite; }
+      .tf-attn-7 { animation: tf-pulse7 3.8s ease-in-out infinite; }
+      .tf-attn-8 { animation: tf-pulse8 2.5s ease-in-out infinite; }
+      .tf-attn-9 { animation: tf-pulse9 3.6s ease-in-out infinite; }
+      .tf-attn-10 { animation: tf-pulse10 4.5s ease-in-out infinite; }
+
+      @keyframes tf-pulse1 { 0%,100% { opacity:0.05; } 50% { opacity:0.5; } }
+      @keyframes tf-pulse2 { 0%,100% { opacity:0.4; } 50% { opacity:0.08; } }
+      @keyframes tf-pulse3 { 0%,100% { opacity:0.08; } 40% { opacity:0.45; } }
+      @keyframes tf-pulse4 { 0%,100% { opacity:0.35; } 60% { opacity:0.05; } }
+      @keyframes tf-pulse5 { 0%,100% { opacity:0.1; } 45% { opacity:0.5; } }
+      @keyframes tf-pulse6 { 0%,100% { opacity:0.4; } 55% { opacity:0.06; } }
+      @keyframes tf-pulse7 { 0%,100% { opacity:0.06; } 50% { opacity:0.4; } }
+      @keyframes tf-pulse8 { 0%,100% { opacity:0.3; } 50% { opacity:0.08; } }
+      @keyframes tf-pulse9 { 0%,100% { opacity:0.08; } 50% { opacity:0.35; } }
+      @keyframes tf-pulse10 { 0%,100% { opacity:0.35; } 50% { opacity:0.05; } }
+
+      .tf-node { fill: currentColor; opacity: 0.75; }
+      .tf-label { fill: currentColor; font-size: 11px; font-family: system-ui, sans-serif; font-weight: 600; opacity: 0.5; text-anchor: middle; letter-spacing: 0.05em; }
+      .tf-divider { stroke: currentColor; opacity: 0.1; stroke-width: 1; stroke-dasharray: 4 4; }
+      .tf-line { stroke: currentColor; stroke-width: 1.2; }
+
+      /* S4 traveling dot */
+      .s4-dot { fill: currentColor; opacity: 0.9; }
+      .s4-dot-glow { fill: currentColor; opacity: 0.2; }
+      .s4-arrow { fill: none; stroke: currentColor; stroke-width: 1.5; opacity: 0.35; stroke-linecap: round; }
+      .s4-arrow-head { fill: currentColor; opacity: 0.35; }
+
+      .s4-travel { animation: s4-move 3s ease-in-out infinite; }
+      .s4-travel-glow { animation: s4-move 3s ease-in-out infinite; }
+      @keyframes s4-move {
+        0% { transform: translate(0, 0); opacity: 0.9; }
+        25% { transform: translate(40px, 0); opacity: 0.9; }
+        50% { transform: translate(80px, 0); opacity: 0.9; }
+        75% { transform: translate(120px, 0); opacity: 0.9; }
+        90% { transform: translate(160px, 0); opacity: 0.6; }
+        100% { transform: translate(160px, 0); opacity: 0; }
+      }
+
+      /* S4 node pulse that follows the traveling dot */
+      .s4-n1 { animation: s4-activate 3s ease-in-out infinite; }
+      .s4-n2 { animation: s4-activate 3s ease-in-out 0.75s infinite; }
+      .s4-n3 { animation: s4-activate 3s ease-in-out 1.5s infinite; }
+      .s4-n4 { animation: s4-activate 3s ease-in-out 2.25s infinite; }
+      .s4-n5 { animation: s4-activate 3s ease-in-out 3s infinite; }
+      @keyframes s4-activate {
+        0%, 15% { r: 6; opacity: 0.75; }
+        8% { r: 9; opacity: 1; }
+      }
+    </style>
+
+    <!-- Divider -->
+    <line class="tf-divider" x1="200" y1="30" x2="200" y2="220"/>
+
+    <!-- Labels -->
+    <text class="tf-label" x="100" y="40">TRANSFORMER</text>
+    <text class="tf-label" x="300" y="40">S4</text>
+
+    <!-- ===== LEFT: Transformer Attention ===== -->
+    <!-- Token positions: arranged in a slight arc for visual interest -->
+    <!-- Node positions: (55,100) (90,155) (110,80) (145,140) (70,175) -->
+
+    <!-- Attention lines (pulsing) -->
+    <line class="tf-line tf-attn-1" x1="55" y1="100" x2="90" y2="155"/>
+    <line class="tf-line tf-attn-2" x1="55" y1="100" x2="110" y2="80"/>
+    <line class="tf-line tf-attn-3" x1="55" y1="100" x2="145" y2="140"/>
+    <line class="tf-line tf-attn-4" x1="90" y1="155" x2="110" y2="80"/>
+    <line class="tf-line tf-attn-5" x1="90" y1="155" x2="145" y2="140"/>
+    <line class="tf-line tf-attn-6" x1="90" y1="155" x2="70" y2="175"/>
+    <line class="tf-line tf-attn-7" x1="110" y1="80" x2="145" y2="140"/>
+    <line class="tf-line tf-attn-8" x1="110" y1="80" x2="70" y2="175"/>
+    <line class="tf-line tf-attn-9" x1="145" y1="140" x2="70" y2="175"/>
+    <line class="tf-line tf-attn-10" x1="55" y1="100" x2="70" y2="175"/>
+
+    <!-- Token nodes (on top of lines) -->
+    <circle class="tf-node" cx="55" cy="100" r="7"/>
+    <circle class="tf-node" cx="90" cy="155" r="7"/>
+    <circle class="tf-node" cx="110" cy="80" r="7"/>
+    <circle class="tf-node" cx="145" cy="140" r="7"/>
+    <circle class="tf-node" cx="70" cy="175" r="7"/>
+
+    <!-- ===== RIGHT: S4 State Space ===== -->
+    <!-- Sequential chain: 5 nodes at y=130, x from 230 to 370, spacing 35 -->
+    <!-- Arrows between them -->
+    <line class="s4-arrow" x1="241" y1="130" x2="259" y2="130"/>
+    <polygon class="s4-arrow-head" points="259,127 265,130 259,133"/>
+    <line class="s4-arrow" x1="281" y1="130" x2="299" y2="130"/>
+    <polygon class="s4-arrow-head" points="299,127 305,130 299,133"/>
+    <line class="s4-arrow" x1="321" y1="130" x2="339" y2="130"/>
+    <polygon class="s4-arrow-head" points="339,127 345,130 339,133"/>
+    <line class="s4-arrow" x1="361" y1="130" x2="379" y2="130"/>
+    <polygon class="s4-arrow-head" points="379,127 385,130 379,133" style="opacity:0.2"/>
+
+    <!-- Self-loop arrows (recurrence) — small arcs above each node -->
+    <path class="s4-arrow" d="M228,121 C228,108 240,108 240,121" style="opacity:0.2"/>
+    <path class="s4-arrow" d="M268,121 C268,108 280,108 280,121" style="opacity:0.2"/>
+    <path class="s4-arrow" d="M308,121 C308,108 320,108 320,121" style="opacity:0.2"/>
+    <path class="s4-arrow" d="M348,121 C348,108 360,108 360,121" style="opacity:0.2"/>
+
+    <!-- S4 nodes -->
+    <circle class="tf-node s4-n1" cx="234" cy="130" r="6"/>
+    <circle class="tf-node s4-n2" cx="274" cy="130" r="6"/>
+    <circle class="tf-node s4-n3" cx="314" cy="130" r="6"/>
+    <circle class="tf-node s4-n4" cx="354" cy="130" r="6"/>
+
+    <!-- Traveling dot -->
+    <circle class="s4-dot-glow s4-travel-glow" cx="234" cy="130" r="12"/>
+    <circle class="s4-dot s4-travel" cx="234" cy="130" r="4"/>
+
+    <!-- Input arrows coming from below each S4 node -->
+    <line class="s4-arrow" x1="234" y1="160" x2="234" y2="140" style="opacity:0.18"/>
+    <line class="s4-arrow" x1="274" y1="160" x2="274" y2="140" style="opacity:0.18"/>
+    <line class="s4-arrow" x1="314" y1="160" x2="314" y2="140" style="opacity:0.18"/>
+    <line class="s4-arrow" x1="354" y1="160" x2="354" y2="140" style="opacity:0.18"/>
+
+    <!-- Subtle input labels -->
+    <text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="234" y="172">x₁</text>
+    <text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="274" y="172">x₂</text>
+    <text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="314" y="172">x₃</text>
+    <text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="354" y="172">x₄</text>
+  </svg>
+</div>
+
+
+<!-- ============================================================
+     SVG 3: STOCHASTIC WAREHOUSE MANAGEMENT (id="svg-warehouse")
+     4x4 grid with items animating from scattered to organized
+     ============================================================ -->
+<div class="preview-card" id="svg-warehouse">
+  <h3>3 — Stochastic Warehouse Management</h3>
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Warehouse items reorganizing from chaotic to optimal placement">
+    <style>
+      .wh-grid { stroke: currentColor; stroke-width: 0.75; fill: none; opacity: 0.12; }
+      .wh-label { fill: currentColor; font-size: 9px; font-family: system-ui, sans-serif; font-weight: 600; opacity: 0.35; text-anchor: middle; letter-spacing: 0.05em; }
+
+      /* Item colors — 4 distinct warehouse categories */
+      .wh-cat-a { fill: #2563eb; } /* blue */
+      .wh-cat-b { fill: #7c3aed; } /* violet */
+      .wh-cat-c { fill: #059669; } /* emerald */
+      .wh-cat-d { fill: #d97706; } /* amber */
+
+      /* Staggered animations: scatter → organized → scatter (looping) */
+      /* Each item has its own keyframes for unique start/end positions */
+      /* Total cycle: 8s — 0-3s scattered, 3-5s move to organized, 5-7.5s organized, 7.5-8s move back to scattered */
+
+      .wh-item-1 { animation: wh-m1 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-2 { animation: wh-m2 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-3 { animation: wh-m3 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-4 { animation: wh-m4 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-5 { animation: wh-m5 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-6 { animation: wh-m6 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-7 { animation: wh-m7 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      .wh-item-8 { animation: wh-m8 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+
+      /* Grid origin: (112, 52), cell size: 44x44 */
+      /* Scattered positions → Organized positions */
+      /* Cat A (blue): organized in top-left 2 cells */
+      @keyframes wh-m1 {
+        0%, 35% { transform: translate(176px, 140px); } /* row3 col2 scattered */
+        50%, 85% { transform: translate(114px, 54px); }  /* row0 col0 organized */
+        100% { transform: translate(176px, 140px); }
+      }
+      @keyframes wh-m2 {
+        0%, 35% { transform: translate(264px, 54px); }  /* row0 col3 scattered */
+        50%, 85% { transform: translate(158px, 54px); }  /* row0 col1 organized */
+        100% { transform: translate(264px, 54px); }
+      }
+      /* Cat B (violet): organized in top-right 2 cells */
+      @keyframes wh-m3 {
+        0%, 35% { transform: translate(114px, 184px); } /* row3 col0 scattered */
+        50%, 85% { transform: translate(202px, 54px); }  /* row0 col2 organized */
+        100% { transform: translate(114px, 184px); }
+      }
+      @keyframes wh-m4 {
+        0%, 35% { transform: translate(202px, 96px); }  /* row1 col2 scattered */
+        50%, 85% { transform: translate(246px, 54px); }  /* row0 col3 organized */
+        100% { transform: translate(202px, 96px); }
+      }
+      /* Cat C (emerald): organized in row 2, left 2 cells */
+      @keyframes wh-m5 {
+        0%, 35% { transform: translate(246px, 184px); } /* row3 col3 scattered */
+        50%, 85% { transform: translate(114px, 140px); } /* row2 col0 organized */
+        100% { transform: translate(246px, 184px); }
+      }
+      @keyframes wh-m6 {
+        0%, 35% { transform: translate(158px, 96px); }  /* row1 col1 scattered */
+        50%, 85% { transform: translate(158px, 140px); } /* row2 col1 organized */
+        100% { transform: translate(158px, 96px); }
+      }
+      /* Cat D (amber): organized in row 2, right 2 cells */
+      @keyframes wh-m7 {
+        0%, 35% { transform: translate(114px, 96px); }  /* row1 col0 scattered */
+        50%, 85% { transform: translate(202px, 140px); } /* row2 col2 organized */
+        100% { transform: translate(114px, 96px); }
+      }
+      @keyframes wh-m8 {
+        0%, 35% { transform: translate(246px, 140px); } /* row2 col3 scattered */
+        50%, 85% { transform: translate(246px, 96px); }  /* row1 col3 organized */
+        100% { transform: translate(246px, 140px); }
+      }
+
+      .wh-phase-label { fill: currentColor; font-size: 10px; font-family: system-ui, sans-serif; opacity: 0.3; text-anchor: middle; }
+      .wh-phase-ind { animation: wh-phase 8s ease-in-out infinite; }
+      @keyframes wh-phase {
+        0%, 35% { opacity: 0.5; }
+        40% { opacity: 0; }
+        50%, 85% { opacity: 0; }
+        90% { opacity: 0; }
+        100% { opacity: 0.5; }
+      }
+      .wh-phase-ind2 { animation: wh-phase2 8s ease-in-out infinite; }
+      @keyframes wh-phase2 {
+        0%, 35% { opacity: 0; }
+        40% { opacity: 0; }
+        50%, 85% { opacity: 0.5; }
+        90% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+    </style>
+
+    <!-- Phase labels -->
+    <text class="wh-phase-label wh-phase-ind" x="200" y="25">STOCHASTIC</text>
+    <text class="wh-phase-label wh-phase-ind2" x="200" y="25">OPTIMIZED</text>
+
+    <!-- 4x4 Grid -->
+    <g>
+      <!-- Rows -->
+      <rect class="wh-grid" x="110" y="50" width="44" height="44"/>
+      <rect class="wh-grid" x="154" y="50" width="44" height="44"/>
+      <rect class="wh-grid" x="198" y="50" width="44" height="44"/>
+      <rect class="wh-grid" x="242" y="50" width="44" height="44"/>
+
+      <rect class="wh-grid" x="110" y="94" width="44" height="44"/>
+      <rect class="wh-grid" x="154" y="94" width="44" height="44"/>
+      <rect class="wh-grid" x="198" y="94" width="44" height="44"/>
+      <rect class="wh-grid" x="242" y="94" width="44" height="44"/>
+
+      <rect class="wh-grid" x="110" y="138" width="44" height="44"/>
+      <rect class="wh-grid" x="154" y="138" width="44" height="44"/>
+      <rect class="wh-grid" x="198" y="138" width="44" height="44"/>
+      <rect class="wh-grid" x="242" y="138" width="44" height="44"/>
+
+      <rect class="wh-grid" x="110" y="182" width="44" height="44"/>
+      <rect class="wh-grid" x="154" y="182" width="44" height="44"/>
+      <rect class="wh-grid" x="198" y="182" width="44" height="44"/>
+      <rect class="wh-grid" x="242" y="182" width="44" height="44"/>
+    </g>
+
+    <!-- Warehouse items (colored rectangles inside cells) -->
+    <!-- Each item is 34x34, centered in a 44x44 cell with 5px offset -->
+    <rect class="wh-cat-a wh-item-1" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-a wh-item-2" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-b wh-item-3" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-b wh-item-4" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-c wh-item-5" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-c wh-item-6" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-d wh-item-7" width="34" height="34" rx="3"/>
+    <rect class="wh-cat-d wh-item-8" width="34" height="34" rx="3"/>
+
+    <!-- Category legend -->
+    <rect x="110" y="236" width="8" height="8" rx="1.5" fill="#2563eb" opacity="0.6"/>
+    <rect x="140" y="236" width="8" height="8" rx="1.5" fill="#7c3aed" opacity="0.6"/>
+    <rect x="170" y="236" width="8" height="8" rx="1.5" fill="#059669" opacity="0.6"/>
+    <rect x="200" y="236" width="8" height="8" rx="1.5" fill="#d97706" opacity="0.6"/>
+    <text style="fill:currentColor;opacity:0.25;font-size:7px;font-family:system-ui;text-anchor:middle" x="180" y="249">CATEGORIES</text>
+  </svg>
+</div>
+
+
+<!-- ============================================================
+     SVG 4: LATENT COMPRESSION / AUTOENCODER (id="svg-autoencoder")
+     Encoder → Bottleneck → Decoder with flowing particles
+     ============================================================ -->
+<div class="preview-card" id="svg-autoencoder">
+  <h3>4 — Latent Compression (Autoencoder)</h3>
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Autoencoder showing data compression through a bottleneck and reconstruction">
+    <style>
+      .ae-cell { opacity: 0.6; rx: 2; }
+      .ae-grid-line { stroke: currentColor; opacity: 0.06; stroke-width: 0.5; }
+      .ae-label { fill: currentColor; font-size: 9px; font-family: system-ui, sans-serif; font-weight: 600; opacity: 0.35; text-anchor: middle; letter-spacing: 0.05em; }
+      .ae-bracket { fill: none; stroke: currentColor; stroke-width: 1.2; opacity: 0.15; stroke-linecap: round; }
+      .ae-bottleneck { fill: currentColor; opacity: 0.12; rx: 4; }
+      .ae-bn-inner { fill: currentColor; opacity: 0.3; rx: 2; }
+
+      /* Encoder funnel lines */
+      .ae-funnel { stroke: currentColor; opacity: 0.08; stroke-width: 0.75; }
+
+      /* Flowing particles — encoder side (converging to center) */
+      .ae-p-enc { fill: currentColor; opacity: 0; }
+      .ae-pe1 { animation: ae-enc1 4s ease-in infinite; }
+      .ae-pe2 { animation: ae-enc2 4s ease-in 0.5s infinite; }
+      .ae-pe3 { animation: ae-enc3 4s ease-in 1s infinite; }
+      .ae-pe4 { animation: ae-enc4 4s ease-in 1.5s infinite; }
+      .ae-pe5 { animation: ae-enc5 4s ease-in 2s infinite; }
+      .ae-pe6 { animation: ae-enc6 4s ease-in 2.5s infinite; }
+      .ae-pe7 { animation: ae-enc7 4s ease-in 3s infinite; }
+      .ae-pe8 { animation: ae-enc8 4s ease-in 3.5s infinite; }
+
+      /* Encoder particles: from input grid area → bottleneck center */
+      @keyframes ae-enc1 {
+        0% { transform: translate(95px, 80px); opacity: 0; }
+        10% { opacity: 0.7; }
+        50% { transform: translate(192px, 115px); opacity: 0.7; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc2 {
+        0% { transform: translate(95px, 110px); opacity: 0; }
+        10% { opacity: 0.6; }
+        50% { transform: translate(192px, 120px); opacity: 0.6; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc3 {
+        0% { transform: translate(95px, 140px); opacity: 0; }
+        10% { opacity: 0.7; }
+        50% { transform: translate(192px, 125px); opacity: 0.7; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc4 {
+        0% { transform: translate(95px, 170px); opacity: 0; }
+        10% { opacity: 0.5; }
+        50% { transform: translate(192px, 130px); opacity: 0.5; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc5 {
+        0% { transform: translate(80px, 90px); opacity: 0; }
+        10% { opacity: 0.6; }
+        50% { transform: translate(192px, 118px); opacity: 0.6; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc6 {
+        0% { transform: translate(80px, 150px); opacity: 0; }
+        10% { opacity: 0.55; }
+        50% { transform: translate(192px, 127px); opacity: 0.55; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc7 {
+        0% { transform: translate(110px, 95px); opacity: 0; }
+        10% { opacity: 0.65; }
+        50% { transform: translate(192px, 122px); opacity: 0.65; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes ae-enc8 {
+        0% { transform: translate(110px, 160px); opacity: 0; }
+        10% { opacity: 0.5; }
+        50% { transform: translate(192px, 128px); opacity: 0.5; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+
+      /* Decoder particles: from bottleneck → output grid area */
+      .ae-p-dec { fill: currentColor; opacity: 0; }
+      .ae-pd1 { animation: ae-dec1 4s ease-out infinite; }
+      .ae-pd2 { animation: ae-dec2 4s ease-out 0.5s infinite; }
+      .ae-pd3 { animation: ae-dec3 4s ease-out 1s infinite; }
+      .ae-pd4 { animation: ae-dec4 4s ease-out 1.5s infinite; }
+      .ae-pd5 { animation: ae-dec5 4s ease-out 2s infinite; }
+      .ae-pd6 { animation: ae-dec6 4s ease-out 2.5s infinite; }
+      .ae-pd7 { animation: ae-dec7 4s ease-out 3s infinite; }
+      .ae-pd8 { animation: ae-dec8 4s ease-out 3.5s infinite; }
+
+      @keyframes ae-dec1 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 115px); opacity: 0; }
+        55% { opacity: 0.7; }
+        100% { transform: translate(305px, 80px); opacity: 0; }
+      }
+      @keyframes ae-dec2 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 120px); opacity: 0; }
+        55% { opacity: 0.6; }
+        100% { transform: translate(305px, 110px); opacity: 0; }
+      }
+      @keyframes ae-dec3 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 125px); opacity: 0; }
+        55% { opacity: 0.7; }
+        100% { transform: translate(305px, 140px); opacity: 0; }
+      }
+      @keyframes ae-dec4 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 130px); opacity: 0; }
+        55% { opacity: 0.5; }
+        100% { transform: translate(305px, 170px); opacity: 0; }
+      }
+      @keyframes ae-dec5 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 118px); opacity: 0; }
+        55% { opacity: 0.6; }
+        100% { transform: translate(320px, 90px); opacity: 0; }
+      }
+      @keyframes ae-dec6 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 127px); opacity: 0; }
+        55% { opacity: 0.55; }
+        100% { transform: translate(320px, 150px); opacity: 0; }
+      }
+      @keyframes ae-dec7 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 122px); opacity: 0; }
+        55% { opacity: 0.65; }
+        100% { transform: translate(290px, 95px); opacity: 0; }
+      }
+      @keyframes ae-dec8 {
+        0%, 49% { opacity: 0; }
+        50% { transform: translate(208px, 128px); opacity: 0; }
+        55% { opacity: 0.5; }
+        100% { transform: translate(290px, 160px); opacity: 0; }
+      }
+
+      /* Bottleneck squeeze pulse */
+      .ae-squeeze { animation: ae-sq 2s ease-in-out infinite; }
+      @keyframes ae-sq {
+        0%, 100% { opacity: 0.12; }
+        50% { opacity: 0.22; }
+      }
+
+      /* Reconstructed grid slight shimmer */
+      .ae-recon { animation: ae-shimmer 4s ease-in-out infinite; }
+      @keyframes ae-shimmer {
+        0%, 100% { opacity: 0.45; }
+        50% { opacity: 0.65; }
+      }
+    </style>
+
+    <!-- Labels -->
+    <text class="ae-label" x="82" y="48">ENCODER INPUT</text>
+    <text class="ae-label" x="200" y="48">LATENT</text>
+    <text class="ae-label" x="318" y="48">DECODER OUTPUT</text>
+
+    <!-- ===== LEFT: Encoder Input Grid (4x4) ===== -->
+    <!-- Grid at x=42, y=60, cell size=28 -->
+    <g>
+      <!-- Row 0 -->
+      <rect class="ae-cell" x="42" y="60" width="26" height="26" fill="#2563eb"/>
+      <rect class="ae-cell" x="70" y="60" width="26" height="26" fill="#7c3aed"/>
+      <rect class="ae-cell" x="98" y="60" width="26" height="26" fill="#2563eb"/>
+      <rect class="ae-cell" x="126" y="60" width="26" height="26" fill="#059669"/>
+      <!-- Row 1 -->
+      <rect class="ae-cell" x="42" y="88" width="26" height="26" fill="#059669"/>
+      <rect class="ae-cell" x="70" y="88" width="26" height="26" fill="#2563eb"/>
+      <rect class="ae-cell" x="98" y="88" width="26" height="26" fill="#d97706"/>
+      <rect class="ae-cell" x="126" y="88" width="26" height="26" fill="#7c3aed"/>
+      <!-- Row 2 -->
+      <rect class="ae-cell" x="42" y="116" width="26" height="26" fill="#d97706"/>
+      <rect class="ae-cell" x="70" y="116" width="26" height="26" fill="#059669"/>
+      <rect class="ae-cell" x="98" y="116" width="26" height="26" fill="#7c3aed"/>
+      <rect class="ae-cell" x="126" y="116" width="26" height="26" fill="#2563eb"/>
+      <!-- Row 3 -->
+      <rect class="ae-cell" x="42" y="144" width="26" height="26" fill="#7c3aed"/>
+      <rect class="ae-cell" x="70" y="144" width="26" height="26" fill="#d97706"/>
+      <rect class="ae-cell" x="98" y="144" width="26" height="26" fill="#059669"/>
+      <rect class="ae-cell" x="126" y="144" width="26" height="26" fill="#d97706"/>
+    </g>
+
+    <!-- Encoder funnel lines (converging) -->
+    <line class="ae-funnel" x1="155" y1="65" x2="188" y2="108"/>
+    <line class="ae-funnel" x1="155" y1="100" x2="188" y2="118"/>
+    <line class="ae-funnel" x1="155" y1="135" x2="188" y2="128"/>
+    <line class="ae-funnel" x1="155" y1="168" x2="188" y2="138"/>
+
+    <!-- ===== MIDDLE: Bottleneck ===== -->
+    <rect class="ae-bottleneck ae-squeeze" x="186" y="100" width="28" height="50" rx="4"/>
+    <rect class="ae-bn-inner" x="192" y="108" width="16" height="14" rx="2"/>
+    <rect class="ae-bn-inner" x="192" y="126" width="16" height="14" rx="2"/>
+
+    <!-- Chevron arrows on bottleneck -->
+    <path d="M180,125 L186,120 L186,130 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M220,125 L214,120 L214,130 Z" fill="currentColor" opacity="0.15"/>
+
+    <!-- Decoder funnel lines (diverging) -->
+    <line class="ae-funnel" x1="215" y1="108" x2="248" y2="65"/>
+    <line class="ae-funnel" x1="215" y1="118" x2="248" y2="100"/>
+    <line class="ae-funnel" x1="215" y1="128" x2="248" y2="135"/>
+    <line class="ae-funnel" x1="215" y1="138" x2="248" y2="168"/>
+
+    <!-- ===== RIGHT: Decoder Output Grid (4x4) ===== -->
+    <!-- Slightly faded/shimmering to suggest reconstruction -->
+    <g class="ae-recon">
+      <!-- Row 0 -->
+      <rect class="ae-cell" x="248" y="60" width="26" height="26" fill="#2563eb"/>
+      <rect class="ae-cell" x="276" y="60" width="26" height="26" fill="#7c3aed"/>
+      <rect class="ae-cell" x="304" y="60" width="26" height="26" fill="#2563eb"/>
+      <rect class="ae-cell" x="332" y="60" width="26" height="26" fill="#059669"/>
+      <!-- Row 1 -->
+      <rect class="ae-cell" x="248" y="88" width="26" height="26" fill="#059669"/>
+      <rect class="ae-cell" x="276" y="88" width="26" height="26" fill="#2563eb"/>
+      <rect class="ae-cell" x="304" y="88" width="26" height="26" fill="#d97706"/>
+      <rect class="ae-cell" x="332" y="88" width="26" height="26" fill="#7c3aed"/>
+      <!-- Row 2 -->
+      <rect class="ae-cell" x="248" y="116" width="26" height="26" fill="#d97706"/>
+      <rect class="ae-cell" x="276" y="116" width="26" height="26" fill="#059669"/>
+      <rect class="ae-cell" x="304" y="116" width="26" height="26" fill="#7c3aed"/>
+      <rect class="ae-cell" x="332" y="116" width="26" height="26" fill="#2563eb"/>
+      <!-- Row 3 -->
+      <rect class="ae-cell" x="248" y="144" width="26" height="26" fill="#7c3aed"/>
+      <rect class="ae-cell" x="276" y="144" width="26" height="26" fill="#d97706"/>
+      <rect class="ae-cell" x="304" y="144" width="26" height="26" fill="#059669"/>
+      <rect class="ae-cell" x="332" y="144" width="26" height="26" fill="#d97706"/>
+    </g>
+
+    <!-- Flowing particles — encoder side -->
+    <circle class="ae-p-enc ae-pe1" r="2.5"/>
+    <circle class="ae-p-enc ae-pe2" r="2.5"/>
+    <circle class="ae-p-enc ae-pe3" r="2.5"/>
+    <circle class="ae-p-enc ae-pe4" r="2.5"/>
+    <circle class="ae-p-enc ae-pe5" r="2"/>
+    <circle class="ae-p-enc ae-pe6" r="2"/>
+    <circle class="ae-p-enc ae-pe7" r="2"/>
+    <circle class="ae-p-enc ae-pe8" r="2"/>
+
+    <!-- Flowing particles — decoder side -->
+    <circle class="ae-p-dec ae-pd1" r="2.5"/>
+    <circle class="ae-p-dec ae-pd2" r="2.5"/>
+    <circle class="ae-p-dec ae-pd3" r="2.5"/>
+    <circle class="ae-p-dec ae-pd4" r="2.5"/>
+    <circle class="ae-p-dec ae-pd5" r="2"/>
+    <circle class="ae-p-dec ae-pd6" r="2"/>
+    <circle class="ae-p-dec ae-pd7" r="2"/>
+    <circle class="ae-p-dec ae-pd8" r="2"/>
+
+    <!-- Dimension annotations -->
+    <text style="fill:currentColor;opacity:0.2;font-size:8px;font-family:monospace;text-anchor:middle" x="97" y="185">16 dims</text>
+    <text style="fill:currentColor;opacity:0.2;font-size:8px;font-family:monospace;text-anchor:middle" x="200" y="165">2 dims</text>
+    <text style="fill:currentColor;opacity:0.2;font-size:8px;font-family:monospace;text-anchor:middle" x="303" y="185">16 dims</text>
+  </svg>
+</div>
+
+</body>
+</html>

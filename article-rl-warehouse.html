@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reinforcement Learning for Real-World Logistics</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        ink: { 50: '#faf8f5', 100: '#f0ece5', 200: '#ddd6c9', 300: '#c4b9a8', 400: '#a69882', 500: '#8a7d68', 600: '#6b6150', 700: '#4a4438', 800: '#2a2520', 900: '#1a1714', 950: '#0e0d0b' },
+                        accent: { light: '#1a6b5c', DEFAULT: '#1a6b5c', dark: '#3dd4ad' },
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Grain texture overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+    </style>
+</head>
+<body class="bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-200 font-body antialiased transition-colors duration-300">
+
+    <!-- Grain overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation bar -->
+    <nav class="max-w-2xl mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
+        <a href="index.html" class="inline-flex items-center gap-2 text-sm font-medium text-ink-500 dark:text-ink-400 hover:text-accent dark:hover:text-accent-dark transition-colors duration-200">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+            Back to portfolio
+        </a>
+
+        <!-- Dark mode toggle -->
+        <button id="dark-mode-toggle" class="p-2 rounded-lg text-ink-500 dark:text-ink-400 hover:text-ink-800 dark:hover:text-ink-100 hover:bg-ink-200/50 dark:hover:bg-ink-800/50 transition-colors duration-200" aria-label="Toggle dark mode">
+            <i class="fa-solid fa-moon text-sm dark:hidden"></i>
+            <i class="fa-solid fa-sun text-sm hidden dark:inline"></i>
+        </button>
+    </nav>
+
+    <!-- Article -->
+    <article class="max-w-2xl mx-auto px-6 pb-20">
+
+        <!-- Title -->
+        <header class="mt-8 mb-12">
+            <h1 class="font-display text-4xl sm:text-5xl font-semibold text-ink-900 dark:text-ink-100 leading-tight tracking-tight">Reinforcement Learning for Real-World Logistics: Lessons From Warehouse Optimization</h1>
+        </header>
+
+        <!-- Body -->
+        <div class="space-y-6">
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">There's a particular moment in technical work when you realize that elegant mathematics and physical reality live in different worlds. For me, that moment came while standing in a warehouse distribution center, watching workers retrieve items from shelves arranged according to classical optimization. Then a surprise surge in demand for a specific product type hit, and I watched that careful arrangement become mostly useless within hours.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This is the starting point for thinking seriously about reinforcement learning applied to logistics. Not as an abstract computational problem, but as a genuine challenge sitting at the intersection of optimization theory, uncertainty, and real-time constraint satisfaction. The story of how we approached this, what actually worked, what surprised us, and the fundamental limitations we hit, tells us something important about when machine learning genuinely improves on classical methods, and when it doesn't.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">The World Classical Operations Research Built</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Operations research solved inventory problems by making a fundamentally important assumption: the problem parameters are known in advance, or at least stable. The classic warehouse allocation problem asks: given a set of inventory items, a set of physical locations with different retrieval costs, and a known demand distribution, what allocation minimizes expected retrieval costs?</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This is a beautiful problem because it has structure. You can formulate it as a combinatorial optimization task. The retrieval cost from location i to fulfill demand j follows predictable mathematics. If demand is stationary, if tomorrow's distribution looks like yesterday's, then you solve the problem once and live with that solution, reoptimizing only when the underlying parameters change significantly.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">For decades, this worked reasonably well. But "reasonably well" started to mean "increasingly not well enough" as supply chains became more complex. The breakdown happens for several reasons, each individually manageable but collectively devastating to the static optimization approach:</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">First, real demand isn't stationary. It shifts seasonally, responds to marketing campaigns, changes with external events. A classical OR system assumes these shifts are slow and predictable. But in modern e-commerce, a single viral TikTok video can shift demand patterns within hours. Second, the problem is genuinely enormous. A medium-sized distribution center might have hundreds of thousands of SKUs and shelf locations. The combinatorial space explodes, making even approximate solutions through classical methods computationally intractable when you're making allocation decisions in near-real-time, dozens of times daily. Third, classical approaches optimize for average-case performance. But in logistics, the outliers matter enormously. The sudden spike in demand for a particular item, the unexpected supplier delay, the equipment failure that changes retrieval costs for an entire zone. These aren't edge cases you can ignore.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This is where reinforcement learning begins to look like more than an academic curiosity.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">Framing the Problem</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">We focused on a specific instantiation: the warehouse allocation problem under stochastic demand. The simplified version: you have a set of inventory items arriving throughout the day, a set of storage locations with different retrieval times (closer to packing stations are faster), and streams of orders requesting items. Your decision, made thousands of times per day, is where to allocate incoming inventory given what you expect future demand to be.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The state space is everything relevant to this decision: current inventory distribution across locations, recent demand patterns (which items are hot), time of day (shift patterns affect retrieval costs), equipment status. The action space is which location to assign to an incoming item. The reward is the negative of retrieval cost, with penalties for stockouts.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Why is this hard? Let me be specific. The state space is genuinely high-dimensional. Thousands of location occupation levels, dozens of demand streams, temporal patterns. The action space is large, hundreds to thousands of possible locations. The reward signal is delayed and noisy. You don't know the true cost of allocating an item to location X until that item is actually retrieved, sometimes days later. Demand patterns are non-stationary and multimodal. Monday mornings look different from Friday afternoons, and during holiday seasons, nothing you learned still applies.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This is the kind of problem where classical RL approaches struggle. Standard Q-learning, policy gradients, all hit walls. The state space is too large for tabular methods. Neural network function approximation helps, but introduces its own complexities around convergence and stability. But the problem also isn't so complex that you should give up. The dynamics are somewhat continuous. Moving an item slightly further from the packing station doesn't cause catastrophic retrieval time changes. Demand, while stochastic, has some structure. There's real signal to exploit if you're willing to work for it.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">The Approach: Hybrid Methods Under Constraints</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">We built a hybrid system. The core was Q-learning with linear function approximation over hand-crafted features. I'll explain later why we ditched deep RL. The features captured distance from packing station, item popularity in recent demand, inventory imbalance in that location, time-of-day demand seasonality. Q-learning gave us a reasonable baseline policy that was interpretable and relatively stable. That interpretability mattered more than I initially expected.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">But we enhanced this with something perhaps counterintuitive: simulated annealing for local optimization. The learned Q-function wasn't a perfect oracle. It made mistakes, especially in novel demand regimes. We needed to escape local optima in the allocation decision itself. So when faced with an incoming item, we'd use Q-learning to identify promising locations, then apply SA to refine the choice, occasionally accepting seemingly suboptimal placements to explore. This hybrid approach was crucial. Pure RL got stuck in ruts. Pure classical optimization was too slow. Together, they actually handled the real problem reasonably well.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">We also used genetic algorithms for a meta-problem: learning good feature representations. Instead of trying to engineer features by hand or learn them via neural networks, we evolved sets of features that performed well across different demand scenarios. This might sound like overkill, but it saved us from a trap I'd watched other teams fall into. They optimized features for historical demand patterns that never repeated, then got blindsided by new conditions.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">Reward Shaping: The Art and Science</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">There's a section in RL textbooks about reward shaping, usually presented as a cautionary tale about how manipulating rewards can lead to Goodhart-like gaming. We experienced both sides of this, intensely and repeatedly.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Our initial reward was straightforward: negative of retrieval cost. This led to terrible behavior. The algorithm learned to pack items into the closest locations to the packing station, which made immediate retrieval fast but created severe bottlenecks. Congestion costs outweighed retrieval cost savings. We learned something: in physical systems, you can't just optimize the immediate reward.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">We added a congestion penalty, a small negative reward for allocating to locations that were becoming overfull. This helped, but now the algorithm was spreading inventory too thinly, losing retrieval efficiency. We added a diversity bonus, reward for spreading items across multiple locations. This created its own problems. Now popular items were scattered everywhere instead of being kept accessible.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The breakthrough came when we stopped trying to encode the problem structure into rewards and instead shaped the reward to match what we actually cared about: dollars spent on labor. We decomposed this explicitly. Retrieval time costs, congestion costs, stockout penalties, equipment utilization. We weighted these according to actual facility economics, not intuition. Suddenly the behavior changed. The algorithm learned to make real trade-offs, sometimes accepting higher retrieval costs if it meant better equipment utilization or lower congestion. It understood the actual economics.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The lesson was humbling: reward shaping isn't a hack. It's fundamental. You're telling the system what you actually care about in units it can optimize. Getting this right requires understanding both the problem and the system's optimization dynamics.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">Results and the 90% Reduction Claim</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">We tested on historical data from a real facility. Against a random allocation baseline, we achieved approximately 90% cost reduction. Let me be precise about what this means and why the baseline matters. Random allocation is genuinely terrible. It doesn't account for location distance or congestion at all. The 90% figure is large but partially because we're starting from a terrible baseline. Against a well-tuned heuristic that just picks the closest available location, we achieved about 15% improvement. Against classical linear programming approaches, about 8-12%, depending on how frequently we reoptimized.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">These numbers might sound modest compared to the random baseline, but in a high-volume facility, 8-12% is enormous. It translates to hundreds of thousands of dollars annually. More importantly, the classical approaches required complete replanning once daily, while our system adapted continuously. During unexpected demand spikes, it didn't suddenly become useless. It handled them intelligently, which matters more than raw efficiency numbers.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">When Convergence Breaks and What We Learned</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">I want to be honest about what didn't work. Our initial attempt to use deep Q-learning with convolutional layers failed spectacularly. We treated the warehouse floor as a spatial grid, which seemed elegant. The learning was chaotic, rewards were nonstationary, and we couldn't figure out whether we were dealing with a fundamental algorithmic problem or just terrible hyperparameter choices. We spent weeks on this before stepping back.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The deeper issue: in high-dimensional state spaces with continuous, delayed rewards, you need either much more data or much more structure. We had decent data (one year of facility operations) but couldn't generate infinite data through simulation without building an extremely expensive simulator. We had some structure, but incorporating it into neural networks was subtle. Classical RL theory doesn't prepare you for this gap.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Instead, linear function approximation over engineered features worked. This felt like a step backward compared to end-to-end learning, but it had crucial advantages. Interpretability, we could see what the system learned. Stability, rewards converged consistently. Efficiency, learning with reasonable data sizes. The tradeoff was that features had to be designed thoughtfully. But this was actually fine. In logistics, domain structure is abundant, and I learned to see that as an asset rather than a limitation.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">The Broader Question: When Does RL Beat Classical Methods?</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This project crystallized something I think is important: reinforcement learning isn't universally better than operations research. Both have real strengths. OR excels when the problem can be formulated cleanly with known parameters and is computationally solvable. RL excels when the environment is dynamic, data is available, and the problem structure is complex enough that hand-coded heuristics fail or become maintenance nightmares.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">Warehouse allocation sits at the boundary. Pure OR fails because demand is nonstationary. Pure RL struggles because the state space is large and continuous. The win comes from hybrid approaches: using OR to provide initial solutions and constraints, using RL to adapt continuously to changing conditions.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">This suggests something important about machine learning's real role in complex systems: not replacement, but augmentation. We tend to phrase ML adoption as "we'll learn this instead of hand-coding it." But for physical systems with real constraints and real costs, the more practical framing is "we'll learn how to adapt our hand-built solutions as conditions change." That's less glamorous but more honest about what works at scale.</p>
+
+            <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-4 tracking-tight">Implications for Real-World Physical Systems</h2>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">What this warehouse project taught us applies more broadly. Real-world physical systems are different from benchmark problems in crucial ways: they have hard constraints that can't be violated, the cost of mistakes is tangible, and the environment is constantly shifting in ways that historic data only imperfectly predicts.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">When applying RL to such systems, several principles emerge. First, interpretability matters more than raw performance. You need to understand why the system made a decision because human operators need to trust it. They take responsibility for failures, so they need to be able to see the logic. Second, graceful degradation is essential. The system should perform reasonably well even in regimes far from training data, not catastrophically fail. Third, hybrid approaches combining classical and learned methods are pragmatically superior to pure RL. At least at our current state of the art, and likely for a while.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The gap between benchmark performance and real deployment is real and substantial. A 15% improvement over classical methods isn't a headline-grabbing number. But it's the difference between a system that companies actually deploy and one that remains a research project. That pragmatic orientation, caring about real deployment, acknowledging real constraints, combining methods creatively, might matter more for AI's actual impact than chasing benchmark records.</p>
+
+            <p class="text-ink-700 dark:text-ink-300 leading-relaxed">The warehouse floor taught me that machine learning works best not when it replaces human expertise, but when it amplifies it, helping human-designed systems adapt intelligently to a changing world. That's both more humble and more realistic than the grand vision of fully autonomous optimization. And in my experience, it's also where the real value gets created.</p>
+
+        </div>
+    </article>
+
+    <!-- Dark mode toggle script -->
+    <script>
+        const toggle = document.getElementById('dark-mode-toggle');
+        const html = document.documentElement;
+
+        // Check for saved preference or system preference
+        if (localStorage.getItem('darkMode') === 'true' ||
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        toggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jainum Sanghavi | Software Engineering & Machine Learning</title>
+  <meta name="description" content="Jainum Sanghavi. Software engineer with a focus in machine learning. I build things that stand the test of time. MS CS at Northeastern, formerly Oracle." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { 50: '#faf8f5', 100: '#f0ece5', 200: '#ddd6c9', 300: '#c4b9a8', 400: '#a69882', 500: '#8a7d68', 600: '#6b6150', 700: '#4a4438', 800: '#2a2520', 900: '#1a1714', 950: '#0e0d0b' },
+            accent: { light: '#1a6b5c', DEFAULT: '#1a6b5c', dark: '#3dd4ad' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .scroll-section { opacity: 0; transform: translateY(24px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .scroll-section.visible { opacity: 1; transform: translateY(0); }
+
+    /* Grain overlay */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Editorial underline */
+    .editorial-link { background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .editorial-link:hover { background-size: 100% 1px; }
+
+    /* Section number */
+    .section-num { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    /* Project card hover */
+    .project-card { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    .project-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -12px rgba(0,0,0,0.12); }
+    .dark .project-card:hover { box-shadow: 0 24px 48px -12px rgba(0,0,0,0.4); }
+
+    /* Skill pill */
+    .skill-pill { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .skill-pill:hover { transform: translateY(-2px); }
+    .skill-pill.primary { border-color: #1a6b5c; color: #1a6b5c; }
+    .dark .skill-pill.primary { border-color: #3dd4ad; color: #3dd4ad; }
+
+    /* Horizontal rule */
+    .editorial-hr { border: none; height: 1px; background: linear-gradient(90deg, transparent, currentColor 20%, currentColor 80%, transparent); opacity: 0.1; }
+
+    /* Staggered animations */
+    .stagger-1 { transition-delay: 0.1s; } .stagger-2 { transition-delay: 0.2s; } .stagger-3 { transition-delay: 0.3s; } .stagger-4 { transition-delay: 0.4s; }
+
+    /* Article card date line */
+    .date-line::before { content: ''; display: inline-block; width: 24px; height: 1px; background: currentColor; opacity: 0.3; vertical-align: middle; margin-right: 8px; }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-900 dark:bg-ink-950 dark:text-ink-100 antialiased">
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="#hero" class="font-display text-2xl font-semibold tracking-tight text-ink-900 dark:text-ink-100 hover:text-accent-light dark:hover:text-accent-dark transition-colors">
+        J.S.
+      </a>
+
+      <div id="nav-links" class="hidden md:flex items-center gap-8">
+        <a href="#work" class="editorial-link text-[13px] font-medium tracking-wide uppercase text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">Work</a>
+        <a href="#experience" class="editorial-link text-[13px] font-medium tracking-wide uppercase text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">Experience</a>
+        <a href="#articles" class="editorial-link text-[13px] font-medium tracking-wide uppercase text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">Writing</a>
+        <a href="#contact" class="editorial-link text-[13px] font-medium tracking-wide uppercase text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">Contact</a>
+        <button id="theme-toggle" class="ml-4 w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-500 dark:text-ink-400 hover:border-ink-400 dark:hover:border-ink-500 transition-colors" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon text-xs dark:hidden"></i>
+          <i class="fa-solid fa-sun text-xs hidden dark:inline"></i>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3 md:hidden">
+        <button id="theme-toggle-mobile" class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-500 dark:text-ink-400" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon text-xs dark:hidden"></i>
+          <i class="fa-solid fa-sun text-xs hidden dark:inline"></i>
+        </button>
+        <button id="mobile-menu-btn" class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-500 dark:text-ink-400" aria-label="Menu">
+          <i class="fa-solid fa-bars text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden border-t border-ink-200/60 dark:border-ink-800/60 bg-ink-50/95 dark:bg-ink-950/95 backdrop-blur-xl">
+      <div class="px-6 py-5 flex flex-col gap-4">
+        <a href="#work" class="text-sm font-medium text-ink-600 dark:text-ink-400">Work</a>
+        <a href="#experience" class="text-sm font-medium text-ink-600 dark:text-ink-400">Experience</a>
+        <a href="#articles" class="text-sm font-medium text-ink-600 dark:text-ink-400">Writing</a>
+        <a href="#contact" class="text-sm font-medium text-ink-600 dark:text-ink-400">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ========== HERO ========== -->
+  <section id="hero" class="scroll-section min-h-[90vh] flex items-end pb-20 pt-32">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8 w-full">
+      <div class="grid lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-8">
+          <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-accent-light dark:text-accent-dark mb-6">Software Engineer · Machine Learning</p>
+          <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-ink-900 dark:text-ink-100 leading-[0.95] mb-8">
+            Jainum<br/>Sanghavi
+          </h1>
+          <p class="text-lg md:text-xl text-ink-500 dark:text-ink-400 leading-relaxed max-w-xl font-light">
+            I build software that stands the test of time. My focus is machine learning grounded in mathematical rigor, from equivariant neural architectures to the infrastructure that deploys them.
+          </p>
+        </div>
+        <div class="lg:col-span-4 flex flex-col gap-3 lg:items-end">
+          <p class="font-mono text-[11px] tracking-wider text-ink-400 dark:text-ink-500 uppercase mb-1">Currently</p>
+          <p class="text-sm text-ink-600 dark:text-ink-400">MS Computer Science</p>
+          <p class="text-sm text-ink-600 dark:text-ink-400">Northeastern University</p>
+          <p class="font-mono text-[11px] text-ink-400 dark:text-ink-500">GPA 4.0 / 4.0</p>
+          <div class="flex gap-4 mt-4">
+            <a href="https://github.com/JainumSanghavi" target="_blank" rel="noopener noreferrer" class="text-ink-400 dark:text-ink-500 hover:text-ink-900 dark:hover:text-ink-100 transition-colors" aria-label="GitHub"><i class="fa-brands fa-github text-lg"></i></a>
+            <a href="https://www.linkedin.com/in/jainum-sanghavi-8bab17190/" target="_blank" rel="noopener noreferrer" class="text-ink-400 dark:text-ink-500 hover:text-ink-900 dark:hover:text-ink-100 transition-colors" aria-label="LinkedIn"><i class="fa-brands fa-linkedin text-lg"></i></a>
+            <a href="mailto:sanghavi.h.j20@gmail.com" class="text-ink-400 dark:text-ink-500 hover:text-ink-900 dark:hover:text-ink-100 transition-colors" aria-label="Email"><i class="fa-solid fa-envelope text-lg"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr class="editorial-hr mt-16 text-ink-900 dark:text-ink-100" />
+    </div>
+  </section>
+
+
+  <!-- ========== SKILLS (compact) ========== -->
+  <section id="skills" class="scroll-section py-16">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-12">
+        <div>
+          <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-400 dark:text-ink-500 mb-4">ML & Frameworks</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-pill primary px-3 py-1 text-[13px] font-medium rounded-full border">PyTorch</span>
+            <span class="skill-pill primary px-3 py-1 text-[13px] font-medium rounded-full border">Geometric DL</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">TensorFlow</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">NumPy</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Pandas</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">OpenCV</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">NLP</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-400 dark:text-ink-500 mb-4">Mathematics</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-pill primary px-3 py-1 text-[13px] font-medium rounded-full border">Group Theory</span>
+            <span class="skill-pill primary px-3 py-1 text-[13px] font-medium rounded-full border">Representation Theory</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Linear Algebra</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Statistics</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Calculus</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Optimization</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-400 dark:text-ink-500 mb-4">Languages & Tools</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Python</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">C++</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Java</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Go</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Docker</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">AWS</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">Flask</span>
+            <span class="skill-pill px-3 py-1 text-[13px] text-ink-500 dark:text-ink-400 rounded-full border border-ink-200 dark:border-ink-700">LangChain</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== PROJECTS ========== -->
+  <section id="work" class="scroll-section py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="flex items-baseline gap-4 mb-16">
+        <span class="section-num text-6xl md:text-8xl font-light text-ink-200 dark:text-ink-800 leading-none">01</span>
+        <div>
+          <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-900 dark:text-ink-100">Selected Work</h2>
+          <p class="text-sm text-ink-400 dark:text-ink-500 mt-1">Research & engineering projects</p>
+        </div>
+      </div>
+
+      <!-- Project 1: Full width feature -->
+      <div class="project-card mb-8 rounded-2xl overflow-hidden border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900">
+        <div class="grid md:grid-cols-2">
+          <div id="svg-equivariant" class="h-64 md:h-auto bg-ink-100/50 dark:bg-ink-800/50 flex items-center justify-center overflow-hidden">
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rotating vector field demonstrating SO(2) equivariance" class="w-full h-full">
+    <style>
+      .eq-field { animation: eq-rotate 12s linear infinite; transform-origin: 200px 125px; }
+      @keyframes eq-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      .eq-arrow { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+      .eq-arrow-head { fill: currentColor; opacity: 0.7; }
+      .eq-center { fill: none; stroke: currentColor; opacity: 0.12; stroke-width: 1; }
+      .eq-dot { fill: currentColor; opacity: 0.25; }
+      .eq-ring { fill: none; stroke: currentColor; stroke-width: 0.5; opacity: 0.08; }
+      .eq-glow { fill: currentColor; opacity: 0.04; }
+      .eq-inner-field { animation: eq-rotate-inner 18s linear infinite reverse; transform-origin: 200px 125px; }
+      @keyframes eq-rotate-inner { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+    <circle class="eq-ring" cx="200" cy="125" r="40"/><circle class="eq-ring" cx="200" cy="125" r="65"/><circle class="eq-ring" cx="200" cy="125" r="90"/><circle class="eq-ring" cx="200" cy="125" r="115"/><circle class="eq-glow" cx="200" cy="125" r="90"/>
+    <circle class="eq-center" cx="200" cy="125" r="4"/><circle class="eq-dot" cx="200" cy="125" r="2"/>
+    <g class="eq-inner-field">
+      <line class="eq-arrow" x1="240" y1="125" x2="258" y2="125" style="opacity:0.4"/><polygon class="eq-arrow-head" points="258,122 264,125 258,128" style="opacity:0.4"/>
+      <line class="eq-arrow" x1="222.5" y1="86" x2="231.5" y2="70.4" style="opacity:0.4"/><polygon class="eq-arrow-head" points="228.6,68.7 234.4,67.1 234.4,73.7" style="opacity:0.4" transform="rotate(-30,231.5,70.4)"/>
+      <line class="eq-arrow" x1="177.5" y1="86" x2="168.5" y2="70.4" style="opacity:0.4"/><polygon class="eq-arrow-head" points="165.6,68.7 165.6,75.3 171.4,73.7" style="opacity:0.4" transform="rotate(30,168.5,70.4)"/>
+      <line class="eq-arrow" x1="160" y1="125" x2="142" y2="125" style="opacity:0.4"/><polygon class="eq-arrow-head" points="142,122 136,125 142,128" style="opacity:0.4"/>
+      <line class="eq-arrow" x1="177.5" y1="164" x2="168.5" y2="179.6" style="opacity:0.4"/><polygon class="eq-arrow-head" points="165.6,181.3 171.4,176.3 165.6,174.7" style="opacity:0.4" transform="rotate(-30,168.5,179.6)"/>
+      <line class="eq-arrow" x1="222.5" y1="164" x2="231.5" y2="179.6" style="opacity:0.4"/><polygon class="eq-arrow-head" points="234.4,181.3 228.6,176.3 234.4,174.7" style="opacity:0.4" transform="rotate(30,231.5,179.6)"/>
+    </g>
+    <g class="eq-field">
+      <line class="eq-arrow" x1="275" y1="125" x2="303" y2="125"/><polygon class="eq-arrow-head" points="303,121.5 310,125 303,128.5"/>
+      <line class="eq-arrow" x1="269.3" y1="85" x2="283.3" y2="60.7"/><polygon class="eq-arrow-head" points="280,58 287,56.5 286.6,64" transform="rotate(-60,283.3,60.7)"/>
+      <line class="eq-arrow" x1="240" y1="55.7" x2="254" y2="31.4"/><polygon class="eq-arrow-head" points="250.7,28.7 257.7,27.2 257.3,34.7" transform="rotate(-30,254,31.4)"/>
+      <line class="eq-arrow" x1="200" y1="45" x2="200" y2="17"/><polygon class="eq-arrow-head" points="196.5,17 200,10 203.5,17"/>
+      <line class="eq-arrow" x1="160" y1="55.7" x2="146" y2="31.4"/><polygon class="eq-arrow-head" points="142.7,34.7 142.3,27.2 149.3,28.7" transform="rotate(30,146,31.4)"/>
+      <line class="eq-arrow" x1="130.7" y1="85" x2="116.7" y2="60.7"/><polygon class="eq-arrow-head" points="113.4,64 113,56.5 120,58" transform="rotate(60,116.7,60.7)"/>
+      <line class="eq-arrow" x1="125" y1="125" x2="97" y2="125"/><polygon class="eq-arrow-head" points="97,121.5 90,125 97,128.5"/>
+      <line class="eq-arrow" x1="130.7" y1="165" x2="116.7" y2="189.3"/><polygon class="eq-arrow-head" points="120,192 113,193.5 113.4,186" transform="rotate(60,116.7,189.3)"/>
+      <line class="eq-arrow" x1="160" y1="194.3" x2="146" y2="218.6"/><polygon class="eq-arrow-head" points="149.3,221.3 142.3,222.8 142.7,215.3" transform="rotate(-30,146,218.6)"/>
+      <line class="eq-arrow" x1="200" y1="205" x2="200" y2="233"/><polygon class="eq-arrow-head" points="196.5,233 200,240 203.5,233"/>
+      <line class="eq-arrow" x1="240" y1="194.3" x2="254" y2="218.6"/><polygon class="eq-arrow-head" points="250.7,221.3 257.3,215.3 257.7,222.8" transform="rotate(30,254,218.6)"/>
+      <line class="eq-arrow" x1="269.3" y1="165" x2="283.3" y2="189.3"/><polygon class="eq-arrow-head" points="280,192 286.6,186 287,193.5" transform="rotate(-60,283.3,189.3)"/>
+    </g>
+  </svg>
+          </div>
+          <div class="p-8 md:p-10 flex flex-col justify-center">
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="px-2 py-0.5 text-[11px] font-mono tracking-wider uppercase text-accent-light dark:text-accent-dark border border-accent-light/30 dark:border-accent-dark/30 rounded">PyTorch</span>
+              <span class="px-2 py-0.5 text-[11px] font-mono tracking-wider uppercase text-accent-light dark:text-accent-dark border border-accent-light/30 dark:border-accent-dark/30 rounded">Geometric DL</span>
+            </div>
+            <h3 class="font-display text-2xl md:text-3xl font-semibold text-ink-900 dark:text-ink-100 mb-3">Equivariant Traction Force</h3>
+            <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed mb-6">
+              Designed SO(2)-equivariant neural architectures that predict cellular traction forces from 2D displacement fields, achieving <strong class="text-ink-700 dark:text-ink-300">7° mean angular error</strong> without any data augmentation. Grounded in group theory and representation theory.
+            </p>
+            <div class="flex gap-5">
+              <a href="https://drive.google.com/file/d/1alLJUFBBY64d-EuLAVFXWiZvRIAnotek/view" target="_blank" rel="noopener noreferrer" class="editorial-link text-sm font-medium text-ink-600 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">Report ↗</a>
+              <a href="code-proprietary.html" class="editorial-link text-sm font-medium text-ink-600 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">Code ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects 2-4: Grid -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- State Spaces vs Transformers -->
+        <div class="project-card rounded-2xl overflow-hidden border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900">
+          <div id="svg-transformers" class="h-48 bg-ink-100/50 dark:bg-ink-800/50 flex items-center justify-center overflow-hidden">
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transformer vs S4" class="w-full h-full">
+    <style>
+      .tf-attn-1 { animation: tf-pulse1 3s ease-in-out infinite; } .tf-attn-2 { animation: tf-pulse2 3.5s ease-in-out infinite; } .tf-attn-3 { animation: tf-pulse3 4s ease-in-out infinite; } .tf-attn-4 { animation: tf-pulse4 2.8s ease-in-out infinite; } .tf-attn-5 { animation: tf-pulse5 3.2s ease-in-out infinite; } .tf-attn-6 { animation: tf-pulse6 4.2s ease-in-out infinite; } .tf-attn-7 { animation: tf-pulse7 3.8s ease-in-out infinite; } .tf-attn-8 { animation: tf-pulse8 2.5s ease-in-out infinite; } .tf-attn-9 { animation: tf-pulse9 3.6s ease-in-out infinite; } .tf-attn-10 { animation: tf-pulse10 4.5s ease-in-out infinite; }
+      @keyframes tf-pulse1 { 0%,100% { opacity:0.05; } 50% { opacity:0.5; } } @keyframes tf-pulse2 { 0%,100% { opacity:0.4; } 50% { opacity:0.08; } } @keyframes tf-pulse3 { 0%,100% { opacity:0.08; } 40% { opacity:0.45; } } @keyframes tf-pulse4 { 0%,100% { opacity:0.35; } 60% { opacity:0.05; } } @keyframes tf-pulse5 { 0%,100% { opacity:0.1; } 45% { opacity:0.5; } } @keyframes tf-pulse6 { 0%,100% { opacity:0.4; } 55% { opacity:0.06; } } @keyframes tf-pulse7 { 0%,100% { opacity:0.06; } 50% { opacity:0.4; } } @keyframes tf-pulse8 { 0%,100% { opacity:0.3; } 50% { opacity:0.08; } } @keyframes tf-pulse9 { 0%,100% { opacity:0.08; } 50% { opacity:0.35; } } @keyframes tf-pulse10 { 0%,100% { opacity:0.35; } 50% { opacity:0.05; } }
+      .tf-node { fill: currentColor; opacity: 0.75; } .tf-label { fill: currentColor; font-size: 11px; font-family: system-ui, sans-serif; font-weight: 600; opacity: 0.5; text-anchor: middle; letter-spacing: 0.05em; } .tf-divider { stroke: currentColor; opacity: 0.1; stroke-width: 1; stroke-dasharray: 4 4; } .tf-line { stroke: currentColor; stroke-width: 1.2; }
+      .s4-dot { fill: currentColor; opacity: 0.9; } .s4-dot-glow { fill: currentColor; opacity: 0.2; } .s4-arrow { fill: none; stroke: currentColor; stroke-width: 1.5; opacity: 0.35; stroke-linecap: round; } .s4-arrow-head { fill: currentColor; opacity: 0.35; }
+      .s4-travel { animation: s4-move 3s ease-in-out infinite; } .s4-travel-glow { animation: s4-move 3s ease-in-out infinite; }
+      @keyframes s4-move { 0% { transform: translate(0, 0); opacity: 0.9; } 25% { transform: translate(40px, 0); } 50% { transform: translate(80px, 0); } 75% { transform: translate(120px, 0); } 90% { transform: translate(160px, 0); opacity: 0.6; } 100% { transform: translate(160px, 0); opacity: 0; } }
+      .s4-n1 { animation: s4-activate 3s ease-in-out infinite; } .s4-n2 { animation: s4-activate 3s ease-in-out 0.75s infinite; } .s4-n3 { animation: s4-activate 3s ease-in-out 1.5s infinite; } .s4-n4 { animation: s4-activate 3s ease-in-out 2.25s infinite; }
+      @keyframes s4-activate { 0%, 15% { r: 6; opacity: 0.75; } 8% { r: 9; opacity: 1; } }
+    </style>
+    <line class="tf-divider" x1="200" y1="30" x2="200" y2="220"/>
+    <text class="tf-label" x="100" y="40">TRANSFORMER</text><text class="tf-label" x="300" y="40">S4</text>
+    <line class="tf-line tf-attn-1" x1="55" y1="100" x2="90" y2="155"/><line class="tf-line tf-attn-2" x1="55" y1="100" x2="110" y2="80"/><line class="tf-line tf-attn-3" x1="55" y1="100" x2="145" y2="140"/><line class="tf-line tf-attn-4" x1="90" y1="155" x2="110" y2="80"/><line class="tf-line tf-attn-5" x1="90" y1="155" x2="145" y2="140"/><line class="tf-line tf-attn-6" x1="90" y1="155" x2="70" y2="175"/><line class="tf-line tf-attn-7" x1="110" y1="80" x2="145" y2="140"/><line class="tf-line tf-attn-8" x1="110" y1="80" x2="70" y2="175"/><line class="tf-line tf-attn-9" x1="145" y1="140" x2="70" y2="175"/><line class="tf-line tf-attn-10" x1="55" y1="100" x2="70" y2="175"/>
+    <circle class="tf-node" cx="55" cy="100" r="7"/><circle class="tf-node" cx="90" cy="155" r="7"/><circle class="tf-node" cx="110" cy="80" r="7"/><circle class="tf-node" cx="145" cy="140" r="7"/><circle class="tf-node" cx="70" cy="175" r="7"/>
+    <line class="s4-arrow" x1="241" y1="130" x2="259" y2="130"/><polygon class="s4-arrow-head" points="259,127 265,130 259,133"/><line class="s4-arrow" x1="281" y1="130" x2="299" y2="130"/><polygon class="s4-arrow-head" points="299,127 305,130 299,133"/><line class="s4-arrow" x1="321" y1="130" x2="339" y2="130"/><polygon class="s4-arrow-head" points="339,127 345,130 339,133"/>
+    <path class="s4-arrow" d="M228,121 C228,108 240,108 240,121" style="opacity:0.2"/><path class="s4-arrow" d="M268,121 C268,108 280,108 280,121" style="opacity:0.2"/><path class="s4-arrow" d="M308,121 C308,108 320,108 320,121" style="opacity:0.2"/><path class="s4-arrow" d="M348,121 C348,108 360,108 360,121" style="opacity:0.2"/>
+    <circle class="tf-node s4-n1" cx="234" cy="130" r="6"/><circle class="tf-node s4-n2" cx="274" cy="130" r="6"/><circle class="tf-node s4-n3" cx="314" cy="130" r="6"/><circle class="tf-node s4-n4" cx="354" cy="130" r="6"/>
+    <circle class="s4-dot-glow s4-travel-glow" cx="234" cy="130" r="12"/><circle class="s4-dot s4-travel" cx="234" cy="130" r="4"/>
+    <text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="234" y="172">x&#x2081;</text><text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="274" y="172">x&#x2082;</text><text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="314" y="172">x&#x2083;</text><text style="fill:currentColor;opacity:0.25;font-size:8px;font-family:system-ui;text-anchor:middle" x="354" y="172">x&#x2084;</text>
+  </svg>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-100 mb-2">State Spaces vs Transformers</h3>
+            <p class="text-[13px] text-ink-500 dark:text-ink-400 leading-relaxed mb-4">Benchmarked Transformer (<strong class="text-ink-700 dark:text-ink-300">4.02</strong>) vs S4 (<strong class="text-ink-700 dark:text-ink-300">5.1 perplexity</strong>) on BookCorpus. Empirical insight into inductive biases of each architecture.</p>
+            <div class="flex gap-4">
+              <a href="https://drive.google.com/file/d/1t7r-5Hq__tveUTD_MopXQXSS2nT0MnVy/view" target="_blank" class="editorial-link text-[13px] font-medium text-ink-600 dark:text-ink-400">Report ↗</a>
+              <a href="https://github.com/JainumSanghavi/BookCorpusLanguageModelling" target="_blank" class="editorial-link text-[13px] font-medium text-ink-600 dark:text-ink-400">Code ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Warehouse Management -->
+        <div class="project-card rounded-2xl overflow-hidden border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900">
+          <div id="svg-warehouse" class="h-48 bg-ink-100/50 dark:bg-ink-800/50 flex items-center justify-center overflow-hidden">
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Warehouse optimization" class="w-full h-full">
+    <style>
+      .wh-grid { stroke: currentColor; stroke-width: 0.75; fill: none; opacity: 0.12; }
+      .wh-cat-a { fill: #2563eb; } .wh-cat-b { fill: #7c3aed; } .wh-cat-c { fill: #059669; } .wh-cat-d { fill: #d97706; }
+      .wh-item-1 { animation: wh-m1 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-2 { animation: wh-m2 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-3 { animation: wh-m3 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-4 { animation: wh-m4 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-5 { animation: wh-m5 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-6 { animation: wh-m6 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-7 { animation: wh-m7 8s ease-in-out infinite; opacity: 0.75; rx: 3; } .wh-item-8 { animation: wh-m8 8s ease-in-out infinite; opacity: 0.75; rx: 3; }
+      @keyframes wh-m1 { 0%, 35% { transform: translate(176px, 140px); } 50%, 85% { transform: translate(114px, 54px); } 100% { transform: translate(176px, 140px); } }
+      @keyframes wh-m2 { 0%, 35% { transform: translate(264px, 54px); } 50%, 85% { transform: translate(158px, 54px); } 100% { transform: translate(264px, 54px); } }
+      @keyframes wh-m3 { 0%, 35% { transform: translate(114px, 184px); } 50%, 85% { transform: translate(202px, 54px); } 100% { transform: translate(114px, 184px); } }
+      @keyframes wh-m4 { 0%, 35% { transform: translate(202px, 96px); } 50%, 85% { transform: translate(246px, 54px); } 100% { transform: translate(202px, 96px); } }
+      @keyframes wh-m5 { 0%, 35% { transform: translate(246px, 184px); } 50%, 85% { transform: translate(114px, 140px); } 100% { transform: translate(246px, 184px); } }
+      @keyframes wh-m6 { 0%, 35% { transform: translate(158px, 96px); } 50%, 85% { transform: translate(158px, 140px); } 100% { transform: translate(158px, 96px); } }
+      @keyframes wh-m7 { 0%, 35% { transform: translate(114px, 96px); } 50%, 85% { transform: translate(202px, 140px); } 100% { transform: translate(114px, 96px); } }
+      @keyframes wh-m8 { 0%, 35% { transform: translate(246px, 140px); } 50%, 85% { transform: translate(246px, 96px); } 100% { transform: translate(246px, 140px); } }
+      .wh-phase-label { fill: currentColor; font-size: 10px; font-family: system-ui, sans-serif; opacity: 0.3; text-anchor: middle; }
+      .wh-phase-ind { animation: wh-phase 8s ease-in-out infinite; } @keyframes wh-phase { 0%, 35% { opacity: 0.5; } 40% { opacity: 0; } 50%, 85% { opacity: 0; } 100% { opacity: 0.5; } }
+      .wh-phase-ind2 { animation: wh-phase2 8s ease-in-out infinite; } @keyframes wh-phase2 { 0%, 35% { opacity: 0; } 50%, 85% { opacity: 0.5; } 100% { opacity: 0; } }
+    </style>
+    <text class="wh-phase-label wh-phase-ind" x="200" y="25">STOCHASTIC</text><text class="wh-phase-label wh-phase-ind2" x="200" y="25">OPTIMIZED</text>
+    <g><rect class="wh-grid" x="110" y="50" width="44" height="44"/><rect class="wh-grid" x="154" y="50" width="44" height="44"/><rect class="wh-grid" x="198" y="50" width="44" height="44"/><rect class="wh-grid" x="242" y="50" width="44" height="44"/><rect class="wh-grid" x="110" y="94" width="44" height="44"/><rect class="wh-grid" x="154" y="94" width="44" height="44"/><rect class="wh-grid" x="198" y="94" width="44" height="44"/><rect class="wh-grid" x="242" y="94" width="44" height="44"/><rect class="wh-grid" x="110" y="138" width="44" height="44"/><rect class="wh-grid" x="154" y="138" width="44" height="44"/><rect class="wh-grid" x="198" y="138" width="44" height="44"/><rect class="wh-grid" x="242" y="138" width="44" height="44"/><rect class="wh-grid" x="110" y="182" width="44" height="44"/><rect class="wh-grid" x="154" y="182" width="44" height="44"/><rect class="wh-grid" x="198" y="182" width="44" height="44"/><rect class="wh-grid" x="242" y="182" width="44" height="44"/></g>
+    <rect class="wh-cat-a wh-item-1" width="34" height="34" rx="3"/><rect class="wh-cat-a wh-item-2" width="34" height="34" rx="3"/><rect class="wh-cat-b wh-item-3" width="34" height="34" rx="3"/><rect class="wh-cat-b wh-item-4" width="34" height="34" rx="3"/><rect class="wh-cat-c wh-item-5" width="34" height="34" rx="3"/><rect class="wh-cat-c wh-item-6" width="34" height="34" rx="3"/><rect class="wh-cat-d wh-item-7" width="34" height="34" rx="3"/><rect class="wh-cat-d wh-item-8" width="34" height="34" rx="3"/>
+  </svg>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-100 mb-2">Stochastic Warehouse Optimization</h3>
+            <p class="text-[13px] text-ink-500 dark:text-ink-400 leading-relaxed mb-4"><strong class="text-ink-700 dark:text-ink-300">90% cost reduction</strong> via Q-learning, simulated annealing, and genetic algorithms for spatial inventory allocation with PyVista 3D visualization.</p>
+            <div class="flex gap-4">
+              <a href="https://drive.google.com/file/d/1KUWQSZ6cpyWjF-HreWiTimhn1tAIFIgE/view" target="_blank" class="editorial-link text-[13px] font-medium text-ink-600 dark:text-ink-400">Report ↗</a>
+              <a href="https://github.com/WarehouseManagementProject/InventoryManagement" target="_blank" class="editorial-link text-[13px] font-medium text-ink-600 dark:text-ink-400">Code ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Latent Compression -->
+        <div class="project-card rounded-2xl overflow-hidden border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900">
+          <div id="svg-autoencoder" class="h-48 bg-ink-100/50 dark:bg-ink-800/50 flex items-center justify-center overflow-hidden">
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Autoencoder compression" class="w-full h-full">
+    <style>
+      .ae-cell { opacity: 0.6; rx: 2; } .ae-label { fill: currentColor; font-size: 9px; font-family: system-ui, sans-serif; font-weight: 600; opacity: 0.35; text-anchor: middle; letter-spacing: 0.05em; } .ae-bottleneck { fill: currentColor; opacity: 0.12; rx: 4; } .ae-bn-inner { fill: currentColor; opacity: 0.3; rx: 2; } .ae-funnel { stroke: currentColor; opacity: 0.08; stroke-width: 0.75; }
+      .ae-p-enc { fill: currentColor; opacity: 0; } .ae-p-dec { fill: currentColor; opacity: 0; }
+      .ae-pe1 { animation: ae-enc1 4s ease-in infinite; } .ae-pe2 { animation: ae-enc2 4s ease-in 0.5s infinite; } .ae-pe3 { animation: ae-enc3 4s ease-in 1s infinite; } .ae-pe4 { animation: ae-enc4 4s ease-in 1.5s infinite; } .ae-pe5 { animation: ae-enc5 4s ease-in 2s infinite; } .ae-pe6 { animation: ae-enc6 4s ease-in 2.5s infinite; } .ae-pe7 { animation: ae-enc7 4s ease-in 3s infinite; } .ae-pe8 { animation: ae-enc8 4s ease-in 3.5s infinite; }
+      @keyframes ae-enc1 { 0% { transform: translate(95px, 80px); opacity: 0; } 10% { opacity: 0.7; } 50% { transform: translate(192px, 115px); opacity: 0.7; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc2 { 0% { transform: translate(95px, 110px); opacity: 0; } 10% { opacity: 0.6; } 50% { transform: translate(192px, 120px); opacity: 0.6; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc3 { 0% { transform: translate(95px, 140px); opacity: 0; } 10% { opacity: 0.7; } 50% { transform: translate(192px, 125px); opacity: 0.7; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc4 { 0% { transform: translate(95px, 170px); opacity: 0; } 10% { opacity: 0.5; } 50% { transform: translate(192px, 130px); opacity: 0.5; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc5 { 0% { transform: translate(80px, 90px); opacity: 0; } 10% { opacity: 0.6; } 50% { transform: translate(192px, 118px); opacity: 0.6; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc6 { 0% { transform: translate(80px, 150px); opacity: 0; } 10% { opacity: 0.55; } 50% { transform: translate(192px, 127px); opacity: 0.55; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc7 { 0% { transform: translate(110px, 95px); opacity: 0; } 10% { opacity: 0.65; } 50% { transform: translate(192px, 122px); opacity: 0.65; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      @keyframes ae-enc8 { 0% { transform: translate(110px, 160px); opacity: 0; } 10% { opacity: 0.5; } 50% { transform: translate(192px, 128px); opacity: 0.5; } 51% { opacity: 0; } 100% { opacity: 0; } }
+      .ae-pd1 { animation: ae-dec1 4s ease-out infinite; } .ae-pd2 { animation: ae-dec2 4s ease-out 0.5s infinite; } .ae-pd3 { animation: ae-dec3 4s ease-out 1s infinite; } .ae-pd4 { animation: ae-dec4 4s ease-out 1.5s infinite; } .ae-pd5 { animation: ae-dec5 4s ease-out 2s infinite; } .ae-pd6 { animation: ae-dec6 4s ease-out 2.5s infinite; } .ae-pd7 { animation: ae-dec7 4s ease-out 3s infinite; } .ae-pd8 { animation: ae-dec8 4s ease-out 3.5s infinite; }
+      @keyframes ae-dec1 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 115px); opacity: 0; } 55% { opacity: 0.7; } 100% { transform: translate(305px, 80px); opacity: 0; } }
+      @keyframes ae-dec2 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 120px); opacity: 0; } 55% { opacity: 0.6; } 100% { transform: translate(305px, 110px); opacity: 0; } }
+      @keyframes ae-dec3 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 125px); opacity: 0; } 55% { opacity: 0.7; } 100% { transform: translate(305px, 140px); opacity: 0; } }
+      @keyframes ae-dec4 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 130px); opacity: 0; } 55% { opacity: 0.5; } 100% { transform: translate(305px, 170px); opacity: 0; } }
+      @keyframes ae-dec5 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 118px); opacity: 0; } 55% { opacity: 0.6; } 100% { transform: translate(320px, 90px); opacity: 0; } }
+      @keyframes ae-dec6 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 127px); opacity: 0; } 55% { opacity: 0.55; } 100% { transform: translate(320px, 150px); opacity: 0; } }
+      @keyframes ae-dec7 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 122px); opacity: 0; } 55% { opacity: 0.65; } 100% { transform: translate(290px, 95px); opacity: 0; } }
+      @keyframes ae-dec8 { 0%,49% { opacity: 0; } 50% { transform: translate(208px, 128px); opacity: 0; } 55% { opacity: 0.5; } 100% { transform: translate(290px, 160px); opacity: 0; } }
+      .ae-squeeze { animation: ae-sq 2s ease-in-out infinite; } @keyframes ae-sq { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.22; } }
+      .ae-recon { animation: ae-shimmer 4s ease-in-out infinite; } @keyframes ae-shimmer { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.65; } }
+    </style>
+    <text class="ae-label" x="82" y="48">ENCODER</text><text class="ae-label" x="200" y="48">LATENT</text><text class="ae-label" x="318" y="48">DECODER</text>
+    <g><rect class="ae-cell" x="42" y="60" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="70" y="60" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="98" y="60" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="126" y="60" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="42" y="88" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="70" y="88" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="98" y="88" width="26" height="26" fill="#d97706"/><rect class="ae-cell" x="126" y="88" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="42" y="116" width="26" height="26" fill="#d97706"/><rect class="ae-cell" x="70" y="116" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="98" y="116" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="126" y="116" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="42" y="144" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="70" y="144" width="26" height="26" fill="#d97706"/><rect class="ae-cell" x="98" y="144" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="126" y="144" width="26" height="26" fill="#d97706"/></g>
+    <line class="ae-funnel" x1="155" y1="65" x2="188" y2="108"/><line class="ae-funnel" x1="155" y1="100" x2="188" y2="118"/><line class="ae-funnel" x1="155" y1="135" x2="188" y2="128"/><line class="ae-funnel" x1="155" y1="168" x2="188" y2="138"/>
+    <rect class="ae-bottleneck ae-squeeze" x="186" y="100" width="28" height="50" rx="4"/><rect class="ae-bn-inner" x="192" y="108" width="16" height="14" rx="2"/><rect class="ae-bn-inner" x="192" y="126" width="16" height="14" rx="2"/>
+    <path d="M180,125 L186,120 L186,130 Z" fill="currentColor" opacity="0.15"/><path d="M220,125 L214,120 L214,130 Z" fill="currentColor" opacity="0.15"/>
+    <line class="ae-funnel" x1="215" y1="108" x2="248" y2="65"/><line class="ae-funnel" x1="215" y1="118" x2="248" y2="100"/><line class="ae-funnel" x1="215" y1="128" x2="248" y2="135"/><line class="ae-funnel" x1="215" y1="138" x2="248" y2="168"/>
+    <g class="ae-recon"><rect class="ae-cell" x="248" y="60" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="276" y="60" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="304" y="60" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="332" y="60" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="248" y="88" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="276" y="88" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="304" y="88" width="26" height="26" fill="#d97706"/><rect class="ae-cell" x="332" y="88" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="248" y="116" width="26" height="26" fill="#d97706"/><rect class="ae-cell" x="276" y="116" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="304" y="116" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="332" y="116" width="26" height="26" fill="#2563eb"/><rect class="ae-cell" x="248" y="144" width="26" height="26" fill="#7c3aed"/><rect class="ae-cell" x="276" y="144" width="26" height="26" fill="#d97706"/><rect class="ae-cell" x="304" y="144" width="26" height="26" fill="#059669"/><rect class="ae-cell" x="332" y="144" width="26" height="26" fill="#d97706"/></g>
+    <circle class="ae-p-enc ae-pe1" r="2.5"/><circle class="ae-p-enc ae-pe2" r="2.5"/><circle class="ae-p-enc ae-pe3" r="2.5"/><circle class="ae-p-enc ae-pe4" r="2.5"/><circle class="ae-p-enc ae-pe5" r="2"/><circle class="ae-p-enc ae-pe6" r="2"/><circle class="ae-p-enc ae-pe7" r="2"/><circle class="ae-p-enc ae-pe8" r="2"/>
+    <circle class="ae-p-dec ae-pd1" r="2.5"/><circle class="ae-p-dec ae-pd2" r="2.5"/><circle class="ae-p-dec ae-pd3" r="2.5"/><circle class="ae-p-dec ae-pd4" r="2.5"/><circle class="ae-p-dec ae-pd5" r="2"/><circle class="ae-p-dec ae-pd6" r="2"/><circle class="ae-p-dec ae-pd7" r="2"/><circle class="ae-p-dec ae-pd8" r="2"/>
+    <text style="fill:currentColor;opacity:0.2;font-size:8px;font-family:monospace;text-anchor:middle" x="97" y="185">16 dims</text><text style="fill:currentColor;opacity:0.2;font-size:8px;font-family:monospace;text-anchor:middle" x="200" y="165">2 dims</text><text style="fill:currentColor;opacity:0.2;font-size:8px;font-family:monospace;text-anchor:middle" x="303" y="185">16 dims</text>
+  </svg>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-100 mb-2">Latent Compression</h3>
+            <p class="text-[13px] text-ink-500 dark:text-ink-400 leading-relaxed mb-4">Deep autoencoders achieving <strong class="text-ink-700 dark:text-ink-300">30 dB PSNR</strong> on CelebA. Compact latent representations that preserve perceptual fidelity while reducing dimensionality.</p>
+            <div class="flex gap-4">
+              <a href="https://drive.google.com/file/d/1UJGWxK1IOCKDT4gV3M4ibfffvYew3Vbs/view" target="_blank" class="editorial-link text-[13px] font-medium text-ink-600 dark:text-ink-400">Report ↗</a>
+              <a href="https://github.com/JainumSanghavi/learned-compression" target="_blank" class="editorial-link text-[13px] font-medium text-ink-600 dark:text-ink-400">Code ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== EXPERIENCE ========== -->
+  <section id="experience" class="scroll-section py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="flex items-baseline gap-4 mb-16">
+        <span class="section-num text-6xl md:text-8xl font-light text-ink-200 dark:text-ink-800 leading-none">02</span>
+        <div>
+          <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-900 dark:text-ink-100">Experience</h2>
+          <p class="text-sm text-ink-400 dark:text-ink-500 mt-1">Professional & academic roles</p>
+        </div>
+      </div>
+
+      <div class="space-y-12">
+        <!-- GTA -->
+        <div class="grid md:grid-cols-12 gap-6">
+          <div class="md:col-span-4">
+            <p class="font-mono text-[11px] tracking-wider text-accent-light dark:text-accent-dark uppercase">Jan 2025 – Present</p>
+            <p class="text-sm text-ink-400 dark:text-ink-500 mt-1">Boston, MA</p>
+          </div>
+          <div class="md:col-span-8">
+            <h3 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-100">Graduate Teaching Assistant</h3>
+            <p class="text-sm text-accent-light dark:text-accent-dark font-medium mb-3">Northeastern University</p>
+            <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
+              GTA for Object-Oriented Design, supporting <strong class="text-ink-700 dark:text-ink-300">400+ students</strong> through weekly code reviews, lab sessions, and office hours. Teaching SOLID principles, design patterns, and clean architecture, translating academic concepts into production-ready habits.
+            </p>
+          </div>
+        </div>
+
+        <hr class="editorial-hr text-ink-900 dark:text-ink-100" />
+
+        <!-- Oracle -->
+        <div class="grid md:grid-cols-12 gap-6">
+          <div class="md:col-span-4">
+            <p class="font-mono text-[11px] tracking-wider text-accent-light dark:text-accent-dark uppercase">Jun 2022 – Jul 2024</p>
+            <p class="text-sm text-ink-400 dark:text-ink-500 mt-1">Mumbai, India</p>
+          </div>
+          <div class="md:col-span-8">
+            <h3 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-100">Software Engineer</h3>
+            <p class="text-sm text-accent-light dark:text-accent-dark font-medium mb-3">Oracle</p>
+            <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed mb-4">
+              Built an NLP-based bug assignment system that cut manual triage time by <strong class="text-ink-700 dark:text-ink-300">35%</strong>, routing defects to the right teams automatically. Led microservices automation on OpenShift improving deployment efficiency by <strong class="text-ink-700 dark:text-ink-300">40%</strong>.
+            </p>
+            <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed">
+              Automated patching across <strong class="text-ink-700 dark:text-ink-300">180+ OCI servers</strong> reducing manual errors by 30%. Designed CI/CD pipelines with Jenkins and Groovy, standardizing release workflows across multiple microservices teams.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education (compact) -->
+      <div class="mt-20 pt-16 border-t border-ink-200/40 dark:border-ink-800/40">
+        <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-400 dark:text-ink-500 mb-8">Education</p>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-100">Northeastern University</h3>
+            <p class="text-sm text-ink-500 dark:text-ink-400">MS Computer Science · GPA 4.0/4.0</p>
+            <p class="font-mono text-[11px] text-ink-400 dark:text-ink-500 mt-1">2024 – 2026 · Boston, MA</p>
+            <p class="text-[12px] text-ink-400 dark:text-ink-500 mt-2 leading-relaxed">Geometric Learning, Actionable Interpretability, ML, NLP, Scalable Distributed Systems, Algorithms</p>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-100">University of Mumbai</h3>
+            <p class="text-sm text-ink-500 dark:text-ink-400">B.Tech Information Technology · GPA 8.21/10</p>
+            <p class="font-mono text-[11px] text-ink-400 dark:text-ink-500 mt-1">2018 – 2022 · Mumbai, India</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== ARTICLES ========== -->
+  <section id="articles" class="scroll-section py-20 md:py-28">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="flex items-baseline gap-4 mb-16">
+        <span class="section-num text-6xl md:text-8xl font-light text-ink-200 dark:text-ink-800 leading-none">03</span>
+        <div>
+          <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-900 dark:text-ink-100">Writing</h2>
+          <p class="text-sm text-ink-400 dark:text-ink-500 mt-1">Long-form technical essays</p>
+        </div>
+      </div>
+
+      <div class="space-y-0 divide-y divide-ink-200/40 dark:divide-ink-800/40">
+        <!-- Article 1 -->
+        <a href="article-equivariance.html" class="block group py-8 first:pt-0">
+          <div class="grid md:grid-cols-12 gap-4 items-baseline">
+            <div class="md:col-span-3">
+              <p class="date-line font-mono text-[11px] text-ink-400 dark:text-ink-500">Nov 2025</p>
+              <p class="mt-1 px-2 py-0.5 inline-block text-[10px] font-mono tracking-wider uppercase text-accent-light dark:text-accent-dark border border-accent-light/20 dark:border-accent-dark/20 rounded">Geometric DL</p>
+            </div>
+            <div class="md:col-span-9">
+              <h3 class="font-display text-xl md:text-2xl font-semibold text-ink-900 dark:text-ink-100 group-hover:text-accent-light dark:group-hover:text-accent-dark transition-colors">Why Equivariance Matters: Encoding Symmetry Into Neural Networks</h3>
+              <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed mt-2 max-w-2xl">Most neural networks learn symmetries through brute-force augmentation. Equivariant architectures encode them directly using group theory, producing networks that are smaller, faster, and provably consistent under transformations.</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 2 -->
+        <a href="article-transformers-ssm.html" class="block group py-8">
+          <div class="grid md:grid-cols-12 gap-4 items-baseline">
+            <div class="md:col-span-3">
+              <p class="date-line font-mono text-[11px] text-ink-400 dark:text-ink-500">Feb 2026</p>
+              <p class="mt-1 px-2 py-0.5 inline-block text-[10px] font-mono tracking-wider uppercase text-accent-light dark:text-accent-dark border border-accent-light/20 dark:border-accent-dark/20 rounded">Sequence Modeling</p>
+            </div>
+            <div class="md:col-span-9">
+              <h3 class="font-display text-xl md:text-2xl font-semibold text-ink-900 dark:text-ink-100 group-hover:text-accent-light dark:group-hover:text-accent-dark transition-colors">Transformers vs State Space Models: What the Perplexity Scores Don't Tell You</h3>
+              <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed mt-2 max-w-2xl">The headline numbers say Transformers win. But when you examine compute budgets, long-range dependencies, and inference efficiency, the picture becomes far more nuanced.</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 3 -->
+        <a href="article-rl-warehouse.html" class="block group py-8 last:pb-0">
+          <div class="grid md:grid-cols-12 gap-4 items-baseline">
+            <div class="md:col-span-3">
+              <p class="date-line font-mono text-[11px] text-ink-400 dark:text-ink-500">Jun 2026</p>
+              <p class="mt-1 px-2 py-0.5 inline-block text-[10px] font-mono tracking-wider uppercase text-accent-light dark:text-accent-dark border border-accent-light/20 dark:border-accent-dark/20 rounded">Operations Research</p>
+            </div>
+            <div class="md:col-span-9">
+              <h3 class="font-display text-xl md:text-2xl font-semibold text-ink-900 dark:text-ink-100 group-hover:text-accent-light dark:group-hover:text-accent-dark transition-colors">Reinforcement Learning for Real-World Logistics</h3>
+              <p class="text-sm text-ink-500 dark:text-ink-400 leading-relaxed mt-2 max-w-2xl">Classical operations research assumes static environments. Combining Q-learning with metaheuristic optimization for stochastic demand yields a 90% cost reduction, but the path there is full of surprises.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== CONTACT / FOOTER ========== -->
+  <section id="contact" class="scroll-section py-20 md:py-28 border-t border-ink-200/40 dark:border-ink-800/40">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="grid md:grid-cols-12 gap-8">
+        <div class="md:col-span-7">
+          <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-900 dark:text-ink-100 mb-4">Let's connect.</h2>
+          <p class="text-ink-500 dark:text-ink-400 leading-relaxed max-w-lg">
+            I'm looking for software engineering and ML roles where I can build systems that last. Currently based in Boston.
+          </p>
+        </div>
+        <div class="md:col-span-5 flex flex-col gap-4 md:items-end md:justify-center">
+          <a href="mailto:sanghavi.h.j20@gmail.com" class="editorial-link text-lg font-display font-semibold text-ink-900 dark:text-ink-100">sanghavi.h.j20@gmail.com</a>
+          <div class="flex gap-6">
+            <a href="https://github.com/JainumSanghavi" target="_blank" rel="noopener noreferrer" class="editorial-link text-sm text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">GitHub</a>
+            <a href="https://www.linkedin.com/in/jainum-sanghavi-8bab17190/" target="_blank" rel="noopener noreferrer" class="editorial-link text-sm text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-ink-200/40 dark:border-ink-800/40">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8 py-8 flex items-center justify-between">
+      <p class="font-mono text-[11px] text-ink-400 dark:text-ink-600">&copy; 2026 Jainum Sanghavi</p>
+      <p class="font-mono text-[11px] text-ink-300 dark:text-ink-700">Building software that lasts, at the intersection of engineering & machine learning</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

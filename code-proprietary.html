@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proprietary Code | Jainum Sanghavi</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { 50: '#faf8f5', 100: '#f0ece5', 200: '#ddd6c9', 300: '#c4b9a8', 400: '#a69882', 500: '#8a7d68', 600: '#6b6150', 700: '#4a4438', 800: '#2a2520', 900: '#1a1714', 950: '#0e0d0b' },
+            accent: { light: '#1a6b5c', DEFAULT: '#1a6b5c', dark: '#3dd4ad' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    .grain-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9999; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 256px 256px;
+    }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-200 font-body antialiased transition-colors duration-300">
+
+  <div class="grain-overlay"></div>
+
+  <nav class="max-w-2xl mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
+    <a href="index.html" class="text-sm font-medium text-accent dark:text-accent-dark hover:underline underline-offset-4 transition-colors duration-200">
+      <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to portfolio
+    </a>
+    <button id="dark-mode-toggle" class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors duration-200" aria-label="Toggle dark mode">
+      <i class="fa-solid fa-sun text-sm dark:hidden"></i>
+      <i class="fa-solid fa-moon text-sm hidden dark:inline"></i>
+    </button>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-6 pt-16 pb-24">
+    <div class="text-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-ink-200 dark:border-ink-700 mb-8">
+        <i class="fa-solid fa-lock text-xl text-ink-400 dark:text-ink-500"></i>
+      </div>
+
+      <h1 class="font-display text-3xl sm:text-4xl font-semibold text-ink-900 dark:text-ink-100 mb-6">
+        Proprietary Code
+      </h1>
+
+      <p class="text-ink-600 dark:text-ink-400 leading-relaxed max-w-lg mx-auto mb-4">
+        This project is currently being prepared for publication. The codebase contains intellectual property related to ongoing research in SO(2)-equivariant neural architectures for cellular traction force prediction.
+      </p>
+
+      <p class="text-ink-500 dark:text-ink-400 leading-relaxed max-w-lg mx-auto mb-10">
+        The code is available to show upon request. If you're interested in the implementation details, I'd be happy to walk you through it.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="mailto:sanghavi.h.j20@gmail.com" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent-light dark:bg-accent-dark text-white dark:text-ink-950 font-medium text-sm hover:opacity-90 transition-opacity">
+          <i class="fa-solid fa-envelope text-xs"></i>
+          Request Access
+        </a>
+        <a href="article-equivariance.html" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-ink-200 dark:border-ink-700 text-ink-600 dark:text-ink-400 font-medium text-sm hover:border-ink-400 dark:hover:border-ink-500 transition-colors">
+          <i class="fa-solid fa-book-open text-xs"></i>
+          Read the Article
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const toggle = document.getElementById('dark-mode-toggle');
+      const html = document.documentElement;
+      if (localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+      toggle.addEventListener('click', function () {
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      });
+    })();
+  </script>
+
+</body>
+</html>
