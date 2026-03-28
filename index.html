@@ -508,7 +508,113 @@
         <!-- Recipe Recommender -->
         <div class="project-card rounded-2xl overflow-hidden border border-ink-200/60 dark:border-ink-800/60 bg-white dark:bg-ink-900">
           <div id="svg-recipe" class="h-48 bg-ink-100/50 dark:bg-ink-800/50 flex items-center justify-center overflow-hidden">
-            <!-- SVG inserted in Task 4 -->
+  <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ingredient-to-recipe matching visualization" class="w-full h-full">
+  <style>
+    .rc-item  { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0.12; }
+    .rc-act-a { animation: rc-glow 6s 0.0s ease-in-out infinite; }
+    .rc-act-b { animation: rc-glow 6s 1.5s ease-in-out infinite; }
+    .rc-act-c { animation: rc-glow 6s 3.0s ease-in-out infinite; }
+    .rc-act-d { animation: rc-glow 6s 4.5s ease-in-out infinite; }
+    .rc-line  { stroke: currentColor; stroke-width: 1; opacity: 0.08; fill: none; }
+    .rc-ln-a  { animation: rc-lp 6s 0.0s ease-in-out infinite; }
+    .rc-ln-b  { animation: rc-lp 6s 1.5s ease-in-out infinite; }
+    .rc-ln-c  { animation: rc-lp 6s 3.0s ease-in-out infinite; }
+    .rc-ln-d  { animation: rc-lp 6s 4.5s ease-in-out infinite; }
+    .rc-dot   { fill: currentColor; opacity: 0; }
+    .rc-dot-a { animation: rc-trav-a 6s 0.0s linear infinite; }
+    .rc-dot-b { animation: rc-trav-b 6s 1.5s linear infinite; }
+    .rc-dot-c { animation: rc-trav-c 6s 3.0s linear infinite; }
+    .rc-dot-d { animation: rc-trav-d 6s 4.5s linear infinite; }
+    .rc-node  { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0.18; }
+    .rc-ping  { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0; }
+    .rc-png-a { animation: rc-ring 6s 1.3s ease-out infinite; }
+    .rc-png-b { animation: rc-ring 6s 2.8s ease-out infinite; }
+    .rc-png-c { animation: rc-ring 6s 4.3s ease-out infinite; }
+    .rc-png-d { animation: rc-ring 6s 5.8s ease-out infinite; }
+    .rc-lbl   { fill: currentColor; opacity: 0.2; font-size: 8px; font-family: 'JetBrains Mono', monospace; text-anchor: middle; }
+    @keyframes rc-glow {
+      0%,  8%  { opacity: 0.12; }
+      18%, 30% { opacity: 0.70; }
+      42%, 100%{ opacity: 0.12; }
+    }
+    @keyframes rc-lp {
+      0%,  8%  { opacity: 0.08; }
+      18%, 30% { opacity: 0.40; }
+      42%, 100%{ opacity: 0.08; }
+    }
+    @keyframes rc-trav-a {
+      0%        { cx: 66;  cy: 50;  opacity: 0; }
+      8%        { cx: 66;  cy: 50;  opacity: 0.80; }
+      23%       { cx: 295; cy: 120; opacity: 0.80; }
+      28%       { cx: 295; cy: 120; opacity: 0; }
+      100%      { cx: 66;  cy: 50;  opacity: 0; }
+    }
+    @keyframes rc-trav-b {
+      0%        { cx: 108; cy: 95;  opacity: 0; }
+      8%        { cx: 108; cy: 95;  opacity: 0.80; }
+      23%       { cx: 295; cy: 120; opacity: 0.80; }
+      28%       { cx: 295; cy: 120; opacity: 0; }
+      100%      { cx: 108; cy: 95;  opacity: 0; }
+    }
+    @keyframes rc-trav-c {
+      0%        { cx: 66;  cy: 145; opacity: 0; }
+      8%        { cx: 66;  cy: 145; opacity: 0.80; }
+      23%       { cx: 295; cy: 120; opacity: 0.80; }
+      28%       { cx: 295; cy: 120; opacity: 0; }
+      100%      { cx: 66;  cy: 145; opacity: 0; }
+    }
+    @keyframes rc-trav-d {
+      0%        { cx: 108; cy: 195; opacity: 0; }
+      8%        { cx: 108; cy: 195; opacity: 0.80; }
+      23%       { cx: 295; cy: 120; opacity: 0.80; }
+      28%       { cx: 295; cy: 120; opacity: 0; }
+      100%      { cx: 108; cy: 195; opacity: 0; }
+    }
+    @keyframes rc-ring {
+      0%   { r: 22; opacity: 0.45; }
+      40%  { r: 38; opacity: 0; }
+      100% { r: 22; opacity: 0; }
+    }
+  </style>
+
+  <!-- Static pantry item grid (background, all at low opacity) -->
+  <rect class="rc-item" x="52" y="41"  width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="94" y="41"  width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="52" y="86"  width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="94" y="86"  width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="52" y="136" width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="94" y="136" width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="52" y="186" width="28" height="18" rx="3"/>
+  <rect class="rc-item" x="94" y="186" width="28" height="18" rx="3"/>
+
+  <!-- Activating items (overlay, animated glow) -->
+  <rect class="rc-item rc-act-a" x="52"  y="41"  width="28" height="18" rx="3"/>
+  <rect class="rc-item rc-act-b" x="94"  y="86"  width="28" height="18" rx="3"/>
+  <rect class="rc-item rc-act-c" x="52"  y="136" width="28" height="18" rx="3"/>
+  <rect class="rc-item rc-act-d" x="94"  y="186" width="28" height="18" rx="3"/>
+
+  <!-- Connecting lines from activating items to recipe node -->
+  <line class="rc-line rc-ln-a" x1="66"  y1="50"  x2="295" y2="120"/>
+  <line class="rc-line rc-ln-b" x1="108" y1="95"  x2="295" y2="120"/>
+  <line class="rc-line rc-ln-c" x1="66"  y1="145" x2="295" y2="120"/>
+  <line class="rc-line rc-ln-d" x1="108" y1="195" x2="295" y2="120"/>
+
+  <!-- Recipe node -->
+  <circle class="rc-node" cx="295" cy="120" r="22"/>
+  <text class="rc-lbl" x="295" y="124">recipe</text>
+
+  <!-- Expanding ping rings arriving at the recipe node -->
+  <circle class="rc-ping rc-png-a" cx="295" cy="120" r="22"/>
+  <circle class="rc-ping rc-png-b" cx="295" cy="120" r="22"/>
+  <circle class="rc-ping rc-png-c" cx="295" cy="120" r="22"/>
+  <circle class="rc-ping rc-png-d" cx="295" cy="120" r="22"/>
+
+  <!-- Traveling dots (one per activating item) -->
+  <circle class="rc-dot rc-dot-a" cx="66"  cy="50"  r="2.5"/>
+  <circle class="rc-dot rc-dot-b" cx="108" cy="95"  r="2.5"/>
+  <circle class="rc-dot rc-dot-c" cx="66"  cy="145" r="2.5"/>
+  <circle class="rc-dot rc-dot-d" cx="108" cy="195" r="2.5"/>
+</svg>
           </div>
           <div class="p-6">
             <div class="flex flex-wrap gap-2 mb-3">
