@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What a Vision Transformer Knows About Space | Jainum Sanghavi</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { 50: '#faf8f5', 100: '#f0ece5', 200: '#ddd6c9', 300: '#c4b9a8', 400: '#a69882', 500: '#8a7d68', 600: '#6b6150', 700: '#4a4438', 800: '#2a2520', 900: '#1a1714', 950: '#0e0d0b' },
+            accent: { light: '#1a6b5c', DEFAULT: '#1a6b5c', dark: '#3dd4ad' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    /* Grain texture overlay */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-800 dark:bg-ink-950 dark:text-ink-200 font-body antialiased transition-colors duration-300">
+
+  <!-- Grain overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- Top navigation bar -->
+  <nav class="max-w-2xl mx-auto px-6 pt-8 pb-4 flex items-center justify-between">
+    <a href="index.html" class="text-sm font-medium text-accent dark:text-accent-dark hover:underline underline-offset-4 transition-colors duration-200">
+      <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to portfolio
+    </a>
+    <button
+      id="dark-mode-toggle"
+      class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-200 dark:border-ink-700 text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors duration-200"
+      aria-label="Toggle dark mode"
+    >
+      <i class="fa-solid fa-sun text-sm dark:hidden"></i>
+      <i class="fa-solid fa-moon text-sm hidden dark:inline"></i>
+    </button>
+  </nav>
+
+  <!-- Article -->
+  <article class="max-w-2xl mx-auto px-6 pt-4 pb-24">
+
+    <header class="mb-12">
+      <h1 class="font-display text-4xl sm:text-5xl font-semibold leading-tight text-ink-900 dark:text-ink-100">
+        What a Vision Transformer Knows About Space
+      </h1>
+    </header>
+
+    <div class="space-y-6">
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        A Vision Transformer trained on ImageNet only ever sees one signal during training: the class label of each image. Cat. Dog. Coffee mug. Boeing 747. Twenty-one thousand of them, repeated across tens of millions of pictures. There is no annotation telling the model where the boundary of an object lies, no supervision about depth, no hint that the world being photographed is three-dimensional and that surfaces recede into the distance. And yet, when you take a frozen ViT off the shelf and bolt a small head onto it, it transfers cleanly to detection, segmentation, and depth estimation. That should be a little unsettling. The model was never told space exists. So why does it know about it?
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        This is the question I set out to answer in a recent project. The frame I chose was old-fashioned and useful: probe the model. Not interpret what it does in some abstract sense, but ask, layer by layer, where exactly inside the residual stream you can read off geometry with nothing more than a linear classifier. Probing is simple, sometimes embarrassingly so, but it has the rare property that the answers it produces can be falsified. If a linear probe at layer L can predict the depth of a patch, the depth signal lives in a separable subspace at that layer. If not, it doesn't. That's the floor.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">A Tale of Two Probes</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        I picked two complementary tasks. The first was patch boundary detection on BSDS500: for each 16&times;16 patch, does it overlap a contour that human annotators agreed on? This is a deeply local property. You don't need to know what's in the image to detect a boundary; you need contrast, edges, the kind of signal that a few self-attention layers can lift out of raw pixels.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The second was per-patch depth regression on NYU Depth V2: given the patch's hidden state, predict its mean depth in the scene. Depth is the opposite kind of property. There is no purely local cue for it. To know that a chair is far and a wall is close, the model has to integrate perspective convergence, occlusion ordering, and relative object size from across the entire image. You can no more infer depth from one patch than you can guess how far a leaf is from the camera by staring at one square of pixels.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        So one probe asks for local structure, the other for global spatial layout. If both peak at the same layer, locality doesn't matter and the model is doing something more uniform. If they peak at different layers, the offset directly measures how many transformer blocks of cross-patch communication the network needs to go from edges to layout.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        I also probed a randomly-initialized ViT-B/16 as a control. This matters more than it sounds. Positional encodings alone can carry surprising amounts of information. In indoor scenes, "the bottom of the image is usually closer than the top" is a strong prior that a random network can read off without any training at all. Without that baseline, you can't tell which part of the signal is learned and which is just architectural artefact.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">A Spatial Hierarchy</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The numbers told a clean story. Boundary detection peaks at layer 5, with a linear probe hitting an average precision of <strong class="text-ink-700 dark:text-ink-300">0.833</strong>, a +0.23 gap over the random baseline that stays flat around 0.60 across all layers. Depth peaks two to three layers later, at layer 8, with a mean absolute error of <strong class="text-ink-700 dark:text-ink-300">0.0875</strong> in normalised units, roughly 0.875 metres of error and a 23% reduction over the random control. Then, at layer 12, both signals collapse. Boundary AP drops to 0.617. Depth MAE rises to 0.0992. The final transformer block specialises for class discrimination, and when it does, geometry stops being readable.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        That offset between L5 and L8 is the central finding. Local structure becomes linearly accessible early, after only a few layers of self-attention have aggregated contrast across neighbouring patches. Global structure takes more work. To estimate depth, the model has to ferry perspective and occlusion cues across the full 14&times;14 patch grid, and that propagation costs two or three additional transformer blocks. The network is building space the same way a textbook visual system might: edges first, layout next, identity last.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        There is a striking parallel to the primate visual cortex here, which I won't push too far because analogies between transformers and brains are easy to overrun. But the early-to-late ordering, V1/V2 detecting edges and V4/IT representing depth, shape, and object identity, was identified decades ago. A classification-trained ViT, with no architectural inductive bias for vision and no spatial supervision, finds an analogous organisation through gradient descent on category labels alone. That's not a coincidence so much as a hint: the structure of natural images forces certain representations to emerge in a particular order, regardless of substrate.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">Linear Is Enough</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        One of the cleanest findings in the experiment came from a comparison I almost didn't run. For each task, I trained both a linear probe (a single 768-dimensional weight vector, 769 parameters in total) and an MLP probe (a 768&rarr;256&rarr;1 network with about 197,000 parameters, <strong class="text-ink-700 dark:text-ink-300">257&times; larger</strong>). The MLP should win, or at the very worst tie. It has the capacity to recover any nonlinear structure the linear probe misses.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        It didn't. The linear probe matches or beats the MLP on both tasks, and beats it dramatically at layer 12. On depth at the peak layer, linear hits MAE 0.0875 while the MLP hits 0.0920. On boundary, the linear AP edges out the MLP at L5. The MLP wins slightly on raw accuracy at the 0.5 threshold for boundaries, but loses the threshold-free comparison and degrades sharply at the final layer where its extra capacity has nothing useful to fit.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        What that tells you is geometric. The information lives in a clean linear subspace. The MLP's extra capacity has no useful nonlinearity to fit, so it fits noise. The depth signal isn't smeared across hundreds of interacting dimensions; it's concentrated, and you can read it with a single weighted sum. That observation shaped what I did next.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">From "Information Is There" to "the Model Uses It"</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        Probing is correlational. It tells you that information is <em>present</em> at a given layer, not that the model <em>uses</em> it for anything downstream. The standard caveat is well known, but it can be addressed. If depth really sits in a single direction in the 768-dimensional residual stream, then removing that direction should be catastrophic for the probe, while removing any other direction should not.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        So I projected out the depth probe's weight vector at every layer and re-ran the probe on the now-mutilated activations. The MAE shot up by <strong class="text-ink-700 dark:text-ink-300">49% to 165%</strong> depending on the layer. At layer 5, it tripled. Then I repeated the experiment with ten random unit vectors, projecting them out one at a time. The MAE moved by <strong class="text-ink-700 dark:text-ink-300">less than 1%</strong> in every case. The depth signal is not diffusely spread; it's pinned to one direction out of 768. A direction that is, mechanistically, a thin slice of the model's representation, but the load-bearing slice for spatial layout.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        That's the strongest single result in the project. It rules out the naive worry that the linear probe might be picking up an arbitrary projection only weakly aligned with the model's own encoding. If that were true, partially erasing the direction would produce erratic, non-monotonic damage. Instead, a dose-response sweep, scaling the ablation from 0 to 1, produces smooth graded degradation. Remove half the depth direction, lose roughly half the depth signal. The encoding is real and graded.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">Active Maintenance, Not Passive Carry</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The last experiment was designed to answer a more subtle question. If the depth signal becomes linearly readable at layer 5 and stays readable through layer 8, is the model passively carrying it through the residual stream, copying it forward untouched, or is it actively re-deriving it at each layer from the full representation?
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        I tested this with a targeted activation patching variant. Standard activation patching swaps an entire layer's activations between a source and a destination input. Mine was finer: at layer L, I replaced <em>only</em> the depth-direction component of the source's hidden state with the destination's depth-direction component, leaving the other 767 dimensions untouched. Then I tracked, layer by layer, how much of that swap survived downstream.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        If depth were passive freight, the swap would persist near 1.0 through to layer 12. It didn't. The effect decayed. But the <em>rate</em> of decay told its own story. A swap at layer 1 lost 88% of its effect by layer 2 and was effectively gone by layer 12. A swap at layer 8 retained <strong class="text-ink-700 dark:text-ink-300">76%</strong> of its effect at layer 9 and 18% even four layers downstream. Mid-layer interventions persist; early ones get erased.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        That's the signature of active maintenance. Each transformer block partially overwrites the depth representation and re-derives it from the full hidden state. Early-layer depth directions are fragile statistical correlations, easily overwritten by subsequent attention. Mid-layer depth directions are stable geometric features, established and continuously refreshed by the surrounding layers. The peak isn't just where the probe accuracy is highest; it's where the encoding has the longest causal reach.
+      </p>
+
+      <h2 class="font-display text-2xl font-semibold text-ink-900 dark:text-ink-100 mt-14 mb-2">What This Changes</h2>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The most concrete practical takeaway is unsentimental: if you're building a downstream system on top of a frozen classification ViT and you care about geometry, <strong class="text-ink-700 dark:text-ink-300">don't read from the last layer</strong>. The L12 features are the worst place to put a depth or segmentation head, because the final block actively destroys spatial information in service of class discrimination. Mid-layer features, around L5 to L8, are where geometry lives. A small linear head on the right layer will outperform a deeper head on the wrong one, and at a fraction of the compute.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The more interesting takeaway is methodological. The progression in this project, from probing ("information is present") to probe-direction ablation ("the information is concentrated and load-bearing") to targeted patching ("the information is actively re-derived"), is a template that generalises. You can run it on any property, in any model, where you can train a linear probe. Most ViT interpretability work stops at the first step. The second is where correlation becomes causation. The third is where you learn whether the model is carrying or constructing.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        The broader lesson is about objectives. ImageNet classification is, on paper, a narrow signal. It contains no annotation about depth, occlusion, or geometry. And yet a model trained on it alone develops a layered spatial hierarchy whose shape echoes what neuroscientists have spent forty years documenting in the primate visual stream. The objective doesn't tell the whole story of what the model learns. The data does, and natural images are saturated with geometric structure. Train a sufficiently flexible model on enough of them, and the geometry gets in even when no one is looking for it. The model has to learn space to do its job, even if no one ever tells it what space is.
+      </p>
+
+      <p class="text-ink-700 dark:text-ink-300 leading-relaxed">
+        That, more than any one number in the paper, is what I find worth dwelling on. The interpretability question, <em>where</em> and <em>how</em>, is just the surface. The deeper question is <em>why</em>, and the answer seems to be that the world we photograph is three-dimensional, that classification implicitly demands a representation rich enough to handle it, and that gradient descent on enough images quietly reinvents the structure of vision from the ground up.
+      </p>
+
+    </div>
+  </article>
+
+  <!-- Dark mode toggle script -->
+  <script>
+    (function () {
+      const toggle = document.getElementById('dark-mode-toggle');
+      const html = document.documentElement;
+
+      // Initialize from localStorage or system preference
+      if (localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+
+      toggle.addEventListener('click', function () {
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      });
+    })();
+  </script>
+
+</body>
+</html>
