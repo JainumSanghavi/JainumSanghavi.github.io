@@ -34,6 +34,16 @@ Built deep autoencoder architectures that learn compact latent representations o
 
 ---
 
+### 5. HEMS — The Negotiated Grid
+A multi-agent home energy management system that flattens neighborhood peak demand by 45%, cuts electricity bills by 42%, and avoids 30% of grid CO₂ — without changing what anyone in the household actually does. Three smart homes, each with its own Ollama-powered LLM agent and private priorities, negotiate with a neighborhood coordinator over 10 simulated days. They reschedule EV charging, laundry, and water heating — same routines, same total energy delivered — and the grid stops seeing everyone hammering it at 7pm.
+
+---
+
+### 6. Regulatory Intelligence System
+A multi-agent, retrieval-augmented AI system that reads live regulatory filings and a company's own internal documents, then answers compliance questions with grounded, cited, self-checked reports. Six specialized agents — Retriever, Analyst, Impact Assessor, Reporter, Evaluator, and Monitor — run through a LangGraph orchestrator with hybrid dense + sparse search, LLM reranking, and automated faithfulness scoring. Every answer is traceable to a specific passage, with an automatic check that it didn't hallucinate. Runs end-to-end on locally-served open models via Ollama — private documents never leave the environment.
+
+---
+
 ## EXPERIENCE DESCRIPTIONS
 
 ### Graduate Teaching Assistant — Northeastern University
