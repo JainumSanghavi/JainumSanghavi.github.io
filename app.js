@@ -245,6 +245,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ============================================================
+  // 7. Project Category Filters
+  // ============================================================
+
+  const filterButtons = document.querySelectorAll('#project-filters .filter-btn');
+  const projectCards = document.querySelectorAll('[data-category]');
+
+  function filterProjects(category) {
+    projectCards.forEach((card) => {
+      const cardCategory = card.dataset.category;
+      if (category === 'all' || cardCategory === category) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  }
+
+  function updateFilterButtons(activeCategory) {
+    filterButtons.forEach((btn) => {
+      const isActive = btn.dataset.filter === activeCategory;
+      if (isActive) {
+        btn.classList.add('bg-accent-light', 'dark:bg-accent-dark', 'text-white', 'dark:text-ink-950', 'border-transparent');
+        btn.classList.remove('text-ink-500', 'dark:text-ink-400', 'border-ink-200', 'dark:border-ink-700');
+      } else {
+        btn.classList.remove('bg-accent-light', 'dark:bg-accent-dark', 'text-white', 'dark:text-ink-950', 'border-transparent');
+        btn.classList.add('text-ink-500', 'dark:text-ink-400', 'border-ink-200', 'dark:border-ink-700');
+      }
+    });
+  }
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.filter;
+      filterProjects(category);
+      updateFilterButtons(category);
+    });
+  });
+
   // Run once on load so initial state is correct
   highlightActiveNav();
   updateNavBackground();
